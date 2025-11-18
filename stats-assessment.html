@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Assessment | Football Statistics & Probability</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.0.3/plotly.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-bg { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+        .quiz-option { transition: all 0.3s ease; }
+        .quiz-option:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .quiz-option.selected { background: linear-gradient(135deg, #059669, #047857); color: white; }
+        .quiz-option.correct { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .quiz-option.incorrect { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .progress-ring { transition: stroke-dasharray 0.5s ease-in-out; }
+        .certificate { 
+            background: linear-gradient(135deg, #10b981, #059669, #047857);
+            border: 8px solid #059669;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <a href="stats-index.html" class="text-xl font-bold text-gray-900">📊 Football Analytics Academy</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-8">
+                    <a href="stats-index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                    <a href="stats-lesson1.html" class="text-gray-700 hover:text-blue-600 font-medium">Introduction</a>
+                    <a href="stats-lesson2.html" class="text-gray-700 hover:text-green-600 font-medium">Data Types</a>
+                    <a href="stats-lesson3.html" class="text-gray-700 hover:text-purple-600 font-medium">Averages</a>
+                    <a href="stats-lesson4.html" class="text-gray-700 hover:text-orange-600 font-medium">Visualizations</a>
+                    <a href="stats-lesson5.html" class="text-gray-700 hover:text-red-600 font-medium">Probability</a>
+                    <a href="#" class="text-green-600 font-medium">Assessment</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+            <h1 class="text-4xl md:text-6xl font-black mb-4">Final Assessment</h1>
+            <p class="text-xl md:text-2xl mb-6">Football Statistics & Probability Mastery</p>
+            <div class="bg-white bg-opacity-20 rounded-lg p-4 inline-block">
+                <p class="text-lg font-medium">Complete all challenges to earn your Football Analytics Certificate!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Assessment Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Progress Bar -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-gray-900">Assessment Progress</h2>
+                <span id="progress-text" class="text-lg font-semibold text-green-600">0 / 15 Complete</span>
+            </div>
+            <div class="bg-gray-200 rounded-full h-4">
+                <div id="progress-bar" class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Quiz Questions -->
+        <div id="quiz-container" class="space-y-8">
+            <!-- Question 1 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="1">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 1: Football Analytics Definition</h3>
+                <p class="text-lg text-gray-700 mb-6">What is the primary purpose of football analytics?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) To replace coaches with computers
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) To make data-driven decisions that improve team and player performance
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) To make football more complicated
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) Only to analyze goals and assists
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="2">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 2: Data Types</h3>
+                <p class="text-lg text-gray-700 mb-6">Which type of football data tracks player positions every second during a match?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) Event data
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) Tracking data
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) Statistical data
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) Performance data
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="3">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 3: Mean Calculation</h3>
+                <p class="text-lg text-gray-700 mb-6">A player scored goals in 5 matches: 2, 0, 1, 3, 1. What is the mean goals per match?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) 1.2 goals
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) 1.4 goals
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) 1.6 goals
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) 1.8 goals
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="4">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 4: Median vs Mean</h3>
+                <p class="text-lg text-gray-700 mb-6">When should you use the median instead of the mean for football data?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) When you want the overall average performance
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) When data has outliers that might skew the average
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) When you want to find the most common value
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) Never - always use the mean
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="5">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 5: Data Visualization</h3>
+                <p class="text-lg text-gray-700 mb-6">Which visualization is best for showing a player's performance trend over a season?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) Bar chart
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) Line graph
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) Pie chart
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) Histogram
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="6">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 6: Pie Charts</h3>
+                <p class="text-lg text-gray-700 mb-6">What is the main purpose of using a pie chart in football analytics?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) To compare different players
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) To show proportions of a whole (like possession percentages)
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) To track performance over time
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) To show correlations between variables
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="7">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 7: Probability Basics</h3>
+                <p class="text-lg text-gray-700 mb-6">If a penalty kick has a 75% success rate, what is the probability of scoring expressed as a decimal?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) 0.075
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) 0.75
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) 7.5
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) 75.0
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="8">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 8: Expected Goals (xG)</h3>
+                <p class="text-lg text-gray-700 mb-6">What does an xG value of 0.4 mean for a specific shot?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) The player will score 0.4 goals from this shot
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) Historically, 40% of similar shots have resulted in goals
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) The player has a 40% chance of scoring this season
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) The shot is worth 0.4 points in fantasy football
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="9">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 9: Data Collection Methods</h3>
+                <p class="text-lg text-gray-700 mb-6">Which method would provide the most accurate player positioning data during a match?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) Manual observation by coaches
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) GPS tracking systems and computer vision
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) Fan surveys and social media
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) Post-match player interviews
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="10">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 10: Performance Metrics</h3>
+                <p class="text-lg text-gray-700 mb-6">Which of these is an example of defensive event data?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) Distance covered by a player
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) Number of tackles won
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) Player's top speed
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) Heart rate during match
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 11 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="11">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 11: Correlation vs Causation</h3>
+                <p class="text-lg text-gray-700 mb-6">Teams with higher possession often win more matches. This is an example of:</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) Causation - possession directly causes winning
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) Correlation - but not necessarily causation
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) No relationship at all
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) Pure coincidence
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 12 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="12">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 12: Statistical Analysis</h3>
+                <p class="text-lg text-gray-700 mb-6">A midfielder has pass completion rates: 85%, 45%, 88%, 90%, 87%. Which average best represents typical performance?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) Mean (79%) - includes the poor game
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) Median (87%) - ignores the outlier
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) Mode (no mode) - not applicable
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) All averages are equally good
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 13 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="13">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 13: Advanced Metrics</h3>
+                <p class="text-lg text-gray-700 mb-6">Which factor would NOT be considered when calculating Expected Goals (xG)?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) Distance from goal
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, false)">
+                        B) Angle to the goal
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, true)">
+                        C) Player's favorite color
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) Defensive pressure
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 14 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="14">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 14: Data Interpretation</h3>
+                <p class="text-lg text-gray-700 mb-6">If Team A has 60% possession and Team B has 40%, what does a pie chart show?</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) Team A is twice as good as Team B
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) The proportion of total possession between the two teams
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) Which team will win the match
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) The final score of the match
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Question 15 -->
+            <div class="question-card bg-white rounded-xl shadow-lg p-8" data-question="15">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Question 15: Practical Application</h3>
+                <p class="text-lg text-gray-700 mb-6">A striker has an xG of 15.5 for the season but has scored 22 goals. This suggests:</p>
+                <div class="space-y-3">
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="a" onclick="selectAnswer(this, false)">
+                        A) The xG model is broken
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="b" onclick="selectAnswer(this, true)">
+                        B) The player is an exceptional finisher, outperforming expectations
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="c" onclick="selectAnswer(this, false)">
+                        C) The player is lucky and will soon stop scoring
+                    </button>
+                    <button class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 hover:bg-gray-100" data-answer="d" onclick="selectAnswer(this, false)">
+                        D) xG is not useful for analyzing strikers
+                    </button>
+                </div>
+                <div class="feedback mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center mt-12">
+            <button id="submit-assessment" onclick="submitAssessment()" 
+                    class="bg-green-600 text-white px-12 py-4 rounded-lg text-xl font-bold hover:bg-green-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled>
+                🏆 Complete Assessment
+            </button>
+        </div>
+
+        <!-- Results Modal -->
+        <div id="results-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+            <div class="bg-white rounded-xl shadow-2xl max-w-2xl mx-4 p-8">
+                <div class="text-center">
+                    <div class="text-6xl mb-4">🏆</div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Assessment Complete!</h2>
+                    <div class="text-6xl font-bold text-green-600 mb-4" id="final-score">0%</div>
+                    <p class="text-lg text-gray-700 mb-6" id="score-message">Great job completing the assessment!</p>
+                    
+                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Your Performance</h3>
+                        <div class="grid md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <strong>Correct Answers:</strong> <span id="correct-count">0</span>/15
+                            </div>
+                            <div>
+                                <strong>Grade:</strong> <span id="grade">-</span>
+                            </div>
+                            <div>
+                                <strong>Time Taken:</strong> <span id="time-taken">-</span>
+                            </div>
+                            <div>
+                                <strong>Topics Mastered:</strong> <span id="topics-mastered">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="viewCertificate()" class="bg-green-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-green-700 transition-colors">
+                            📜 View Certificate
+                        </button>
+                        <button onclick="retakeAssessment()" class="bg-gray-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-gray-700 transition-colors">
+                            🔄 Retake Assessment
+                        </button>
+                        <button onclick="backToHome()" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors">
+                            🏠 Back to Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certificate Modal -->
+        <div id="certificate-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+            <div class="certificate rounded-xl p-12 max-w-4xl mx-4 text-center text-white">
+                <div class="text-6xl mb-6">📊</div>
+                <h1 class="text-4xl font-bold mb-4">Certificate of Achievement</h1>
+                <h2 class="text-2xl mb-6">Football Statistics & Probability</h2>
+                
+                <div class="bg-white bg-opacity-20 rounded-lg p-6 mb-6">
+                    <p class="text-lg mb-2">This certifies that</p>
+                    <p class="text-3xl font-bold mb-2" id="student-name">Analytics Student</p>
+                    <p class="text-lg mb-4">has successfully completed the Football Statistics & Probability curriculum</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 text-left">
+                        <div>
+                            <strong>Final Score:</strong> <span id="cert-score">0%</span><br>
+                            <strong>Grade:</strong> <span id="cert-grade">-</span><br>
+                            <strong>Date:</strong> <span id="cert-date">-</span>
+                        </div>
+                        <div>
+                            <strong>Topics Covered:</strong><br>
+                            <span class="text-sm">• Introduction to Football Analytics<br>
+                            • Football Data Types & Collection<br>
+                            • Statistical Averages & Analysis<br>
+                            • Data Visualizations & Charts<br>
+                            • Probability Theory & xG Calculations</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4">
+                    <button onclick="downloadCertificate()" class="bg-white text-green-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                        💾 Download PDF
+                    </button>
+                    <button onclick="closeCertificate()" class="bg-green-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-900 transition-colors">
+                        ✕ Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let correctAnswers = 0;
+        let totalQuestions = 15;
+        let startTime = new Date();
+        let answeredQuestions = new Set();
+
+        const answerKey = {
+            1: 'b', 2: 'b', 3: 'b', 4: 'b', 5: 'b', 6: 'b', 7: 'b', 8: 'b', 9: 'b', 10: 'b',
+            11: 'b', 12: 'b', 13: 'c', 14: 'b', 15: 'b'
+        };
+
+        const feedbackMessages = {
+            1: 'Correct! Football analytics primary purpose is making data-driven decisions to improve performance.',
+            2: 'Correct! Tracking data provides continuous position information for all players and the ball.',
+            3: 'Correct! Mean = (2+0+1+3+1) ÷ 5 = 7 ÷ 5 = 1.4 goals per match.',
+            4: 'Correct! The median is less affected by outliers and better represents typical performance.',
+            5: 'Correct! Line graphs are perfect for showing trends and changes over time.',
+            6: 'Correct! Pie charts show proportions of a whole, like possession percentages.',
+            7: 'Correct! 75% = 0.75 in decimal form. Probability ranges from 0 to 1.',
+            8: 'Correct! xG represents the historical success rate of similar shots - 0.4 means 40% success rate.',
+            9: 'Correct! GPS tracking and computer vision provide the most accurate positioning data.',
+            10: 'Correct! Tackles won is an example of defensive event data.',
+            11: 'Correct! This shows correlation - possession and winning are related but possession doesn\'t directly cause winning.',
+            12: 'Correct! The median (87%) better represents typical performance by ignoring the outlier (45% game).',
+            13: 'Correct! Player\'s favorite color is irrelevant to xG calculations.',
+            14: 'Correct! The pie chart shows the proportion of total possession between the two teams.',
+            15: 'Correct! Scoring significantly more than xG suggests suggests exceptional finishing ability.'
+        };
+
+        function selectAnswer(button, isCorrect) {
+            const questionCard = button.closest('.question-card');
+            const questionNum = parseInt(questionCard.dataset.question);
+            const feedback = questionCard.querySelector('.feedback');
+            
+            // Remove previous selections
+            questionCard.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Mark selected answer
+            button.classList.add('selected');
+            
+            // Store answer
+            this.answers.set(questionNum, isCorrect);
+            
+            // Show feedback
+            if (isCorrect) {
+                button.classList.add('correct');
+                feedback.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-2"></i>Correct! ${feedbackMessages[questionNum]}`;
+                feedback.className = 'feedback mt-4 p-4 rounded-lg bg-green-50 text-green-800 border border-green-200';
+                if (!answeredQuestions.has(questionNum)) {
+                    correctAnswers++;
+                    answeredQuestions.add(questionNum);
+                }
+            } else {
+                button.classList.add('incorrect');
+                feedback.innerHTML = `<i class="fas fa-times-circle text-red-500 mr-2"></i>Not quite right. ${feedbackMessages[questionNum]}`;
+                feedback.className = 'feedback mt-4 p-4 rounded-lg bg-red-50 text-red-800 border border-red-200';
+                if (answeredQuestions.has(questionNum)) {
+                    correctAnswers--;
+                    answeredQuestions.delete(questionNum);
+                }
+            }
+            
+            feedback.classList.remove('hidden');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = (answeredQuestions.size / totalQuestions) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `${answeredQuestions.size} / ${totalQuestions} Complete`;
+            
+            // Enable submit button when all questions are answered
+            if (answeredQuestions.size === totalQuestions) {
+                document.getElementById('submit-assessment').disabled = false;
+            }
+        }
+
+        function submitAssessment() {
+            const endTime = new Date();
+            const timeDiff = Math.floor((endTime - startTime) / 1000);
+            const minutes = Math.floor(timeDiff / 60);
+            const seconds = timeDiff % 60;
+            
+            const score = Math.round((correctAnswers / totalQuestions) * 100);
+            let grade, message;
+            
+            if (score >= 90) {
+                grade = 'A';
+                message = 'Outstanding! You have mastered Football Statistics & Probability! 🌟';
+            } else if (score >= 80) {
+                grade = 'B';
+                message = 'Excellent work! You have a strong understanding of football analytics! 👏';
+            } else if (score >= 70) {
+                grade = 'C';
+                message = 'Good job! You understand the basics but could review some concepts. 📚';
+            } else if (score >= 60) {
+                grade = 'D';
+                message = 'Not bad, but you should review the lessons to strengthen your understanding. 💪';
+            } else {
+                grade = 'F';
+                message = 'Keep studying! Review all lessons and try again. You can do it! 🎯';
+            }
+            
+            // Update results modal
+            document.getElementById('final-score').textContent = score + '%';
+            document.getElementById('score-message').textContent = message;
+            document.getElementById('correct-count').textContent = correctAnswers;
+            document.getElementById('grade').textContent = grade;
+            document.getElementById('time-taken').textContent = `${minutes}m ${seconds}s`;
+            
+            const topicsMastered = correctAnswers >= 12 ? 'All Topics' : 
+                                  correctAnswers >= 8 ? 'Most Topics' : 'Some Topics';
+            document.getElementById('topics-mastered').textContent = topicsMastered;
+            
+            // Update certificate
+            document.getElementById('cert-score').textContent = score + '%';
+            document.getElementById('cert-grade').textContent = grade;
+            document.getElementById('cert-date').textContent = new Date().toLocaleDateString();
+            
+            // Show results modal
+            document.getElementById('results-modal').classList.remove('hidden');
+            document.getElementById('results-modal').classList.add('flex');
+            
+            // Update progress in localStorage
+            let progress = JSON.parse(localStorage.getItem('statsProgress') || '{"intro": 0, "data": 0, "averages": 0, "viz": 0, "prob": 0, "assessment": 0}');
+            progress.assessment = score;
+            localStorage.setItem('statsProgress', JSON.stringify(progress));
+        }
+
+        function viewCertificate() {
+            document.getElementById('results-modal').classList.add('hidden');
+            document.getElementById('results-modal').classList.remove('flex');
+            document.getElementById('certificate-modal').classList.remove('hidden');
+            document.getElementById('certificate-modal').classList.add('flex');
+        }
+
+        function closeCertificate() {
+            document.getElementById('certificate-modal').classList.add('hidden');
+            document.getElementById('certificate-modal').classList.remove('flex');
+        }
+
+        function retakeAssessment() {
+            location.reload();
+        }
+
+        function backToHome() {
+            window.location.href = 'stats-index.html';
+        }
+
+        function downloadCertificate() {
+            alert('Certificate download functionality would be implemented with a PDF generation library in a real application.');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            startTime = new Date();
+        });
+    </script>
+</body>
+</html>

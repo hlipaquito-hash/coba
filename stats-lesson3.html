@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistical Averages | Statistics Curriculum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.0.3/plotly.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-bg { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .quiz-option { transition: all 0.3s ease; }
+        .quiz-option:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .quiz-option.selected { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
+        .quiz-option.correct { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .quiz-option.incorrect { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .calculator-input { transition: all 0.3s ease; }
+        .calculator-input:focus { transform: scale(1.02); box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1); }
+        .example-card { transition: all 0.3s ease; }
+        .example-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <a href="stats-index.html" class="text-xl font-bold text-gray-900">📊 Football Analytics Academy</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-8">
+                    <a href="stats-index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                    <a href="stats-lesson1.html" class="text-gray-700 hover:text-blue-600 font-medium">Introduction</a>
+                    <a href="stats-lesson2.html" class="text-gray-700 hover:text-green-600 font-medium">Data Types</a>
+                    <a href="#" class="text-purple-600 font-medium">Averages</a>
+                    <a href="stats-lesson4.html" class="text-gray-700 hover:text-orange-600 font-medium">Visualizations</a>
+                    <a href="stats-lesson5.html" class="text-gray-700 hover:text-red-600 font-medium">Probability</a>
+                    <a href="stats-assessment.html" class="text-gray-700 hover:text-gray-600 font-medium">Assessment</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+            <h1 class="text-4xl md:text-6xl font-black mb-4">Statistical Averages</h1>
+            <p class="text-xl md:text-2xl mb-6">Mean, Median, Mode in Football</p>
+            <div class="bg-white bg-opacity-20 rounded-lg p-4 inline-block">
+                <p class="text-lg font-medium">"Averages help us understand what's typical in football performance."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Theory Section -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Core Concept -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Understanding Statistical Averages</h2>
+                    <div class="space-y-6">
+                        <div class="concept-card bg-purple-50 rounded-lg p-6">
+                            <h3 class="text-xl font-semibold text-purple-900 mb-3">Three Types of Averages</h3>
+                            <p class="text-purple-700 leading-relaxed">
+                                In football analytics, we use three main types of averages to understand player and team performance: 
+                                <strong>Mean</strong> (the arithmetic average), <strong>Median</strong> (the middle value), and <strong>Mode</strong> (the most frequent value).
+                            </p>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="example-card bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6">
+                                <h4 class="font-semibold text-blue-900 mb-3">📊 Mean</h4>
+                                <p class="text-blue-700 text-sm mb-3">
+                                    The arithmetic average - sum of all values divided by the number of values.
+                                </p>
+                                <div class="bg-white p-3 rounded-lg">
+                                    <p class="text-xs text-blue-800">
+                                        <strong>Formula:</strong> Sum ÷ Count
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="example-card bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6">
+                                <h4 class="font-semibold text-green-900 mb-3">🎯 Median</h4>
+                                <p class="text-green-700 text-sm mb-3">
+                                    The middle value when data is arranged in order. Less affected by extreme values.
+                                </p>
+                                <div class="bg-white p-3 rounded-lg">
+                                    <p class="text-xs text-green-800">
+                                        <strong>Use when:</strong> Data has outliers
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="example-card bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6">
+                                <h4 class="font-semibold text-purple-900 mb-3">🔥 Mode</h4>
+                                <p class="text-purple-700 text-sm mb-3">
+                                    The most frequently occurring value. Shows what's most common.
+                                </p>
+                                <div class="bg-white p-3 rounded-lg">
+                                    <p class="text-xs text-purple-800">
+                                        <strong>Use for:</strong> Categorical data
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Calculator -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Football Statistics Calculator</h2>
+                    <div class="space-y-6">
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">Player Performance Data</h3>
+                            <p class="text-gray-700 mb-4">Enter a player's match statistics (comma-separated):</p>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Goals per match (e.g., 1, 0, 2, 1, 0, 3, 1)</label>
+                                    <input type="text" id="goals-input" placeholder="1, 0, 2, 1, 0, 3, 1" 
+                                           class="calculator-input w-full p-3 border border-gray-300 rounded-lg"
+                                           onchange="calculateAverages()">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Shots per match (e.g., 4, 2, 5, 3, 1, 6, 4)</label>
+                                    <input type="text" id="shots-input" placeholder="4, 2, 5, 3, 1, 6, 4" 
+                                           class="calculator-input w-full p-3 border border-gray-300 rounded-lg"
+                                           onchange="calculateAverages()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-purple-50 rounded-lg p-6">
+                                <h4 class="font-semibold text-purple-900 mb-4">Calculated Averages</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-purple-700">Mean Goals:</span>
+                                        <span id="mean-goals" class="font-bold text-purple-900">-</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-purple-700">Median Goals:</span>
+                                        <span id="median-goals" class="font-bold text-purple-900">-</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-purple-700">Mode Goals:</span>
+                                        <span id="mode-goals" class="font-bold text-purple-900">-</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-purple-700">Mean Shots:</span>
+                                        <span id="mean-shots" class="font-bold text-purple-900">-</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-purple-700">Median Shots:</span>
+                                        <span id="median-shots" class="font-bold text-purple-900">-</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-purple-700">Mode Shots:</span>
+                                        <span id="mode-shots" class="font-bold text-purple-900">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-blue-50 rounded-lg p-6">
+                                <h4 class="font-semibold text-blue-900 mb-4">Analysis & Insights</h4>
+                                <div id="analysis-text" class="text-blue-800 text-sm space-y-2">
+                                    <p>Enter data above to see analysis...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Football Applications -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Football Applications</h2>
+                    <div class="space-y-6">
+                        <div class="example-card border-l-4 border-red-500 pl-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-3">⚽ Goal Scoring Analysis</h3>
+                            <p class="text-gray-700 mb-3">
+                                A striker scores the following goals over 10 matches: 1, 0, 2, 1, 0, 3, 1, 0, 2, 1
+                            </p>
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                                    <div>
+                                        <strong>Mean:</strong> 1.1 goals/match<br>
+                                        <em>Average performance</em>
+                                    </div>
+                                    <div>
+                                        <strong>Median:</strong> 1 goal/match<br>
+                                        <em>Typical performance</em>
+                                    </div>
+                                    <div>
+                                        <strong>Mode:</strong> 1 goal (5 times)<br>
+                                        <em>Most common outcome</em>
+                                    </div>
+                                </div>
+                                <p class="text-red-800 text-sm mt-3">
+                                    <strong>Insight:</strong> The player consistently scores 1 goal but occasionally has explosive games (3 goals). 
+                                    The median and mode both being 1 shows this is their typical performance level.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="example-card border-l-4 border-blue-500 pl-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-3">🎯 Pass Completion Analysis</h3>
+                            <p class="text-gray-700 mb-3">
+                                A midfielder's pass completion rates over 8 matches: 85%, 78%, 92%, 88%, 45%, 90%, 87%, 89%
+                            </p>
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                                    <div>
+                                        <strong>Mean:</strong> 81.8%<br>
+                                        <em>Overall average</em>
+                                    </div>
+                                    <div>
+                                        <strong>Median:</strong> 87.5%<br>
+                                        <em>Typical performance</em>
+                                    </div>
+                                    <div>
+                                        <strong>Mode:</strong> No mode<br>
+                                        <em>All values unique</em>
+                                    </div>
+                                </div>
+                                <p class="text-blue-800 text-sm mt-3">
+                                    <strong>Insight:</strong> The median (87.5%) is much higher than the mean (81.8%) because of one poor game (45%). 
+                                    The median better represents the player's typical passing ability.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="example-card border-l-4 border-green-500 pl-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-3">🏃‍♂️ Distance Covered Analysis</h3>
+                            <p class="text-gray-700 mb-3">
+                                A defender's distance covered (km) in 6 matches: 11.2, 10.8, 12.1, 11.5, 11.2, 11.8
+                            </p>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                                    <div>
+                                        <strong>Mean:</strong> 11.43 km<br>
+                                        <em>Average distance</em>
+                                    </div>
+                                    <div>
+                                        <strong>Median:</strong> 11.35 km<br>
+                                        <em>Middle value</em>
+                                    </div>
+                                    <div>
+                                        <strong>Mode:</strong> 11.2 km<br>
+                                        <em>Most frequent</em>
+                                    </div>
+                                </div>
+                                <p class="text-green-800 text-sm mt-3">
+                                    <strong>Insight:</strong> All three averages are very close, indicating consistent performance. 
+                                    The mode of 11.2 km shows this is the player's typical work rate.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- When to Use Each Average -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">When to Use Each Average</h2>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6">
+                            <h3 class="text-xl font-semibold text-blue-900 mb-4">📊 Use Mean When...</h3>
+                            <ul class="text-blue-700 space-y-2 text-sm">
+                                <li>• Data is normally distributed</li>
+                                <li>• No extreme outliers exist</li>
+                                <li>• You want the overall average</li>
+                                <li>• Comparing total performance</li>
+                                <li>• Budgeting or planning</li>
+                            </ul>
+                            <div class="mt-4 p-3 bg-white rounded-lg">
+                                <p class="text-xs text-blue-800">
+                                    <strong>Example:</strong> Average goals per season for financial planning
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6">
+                            <h3 class="text-xl font-semibold text-green-900 mb-4">🎯 Use Median When...</h3>
+                            <ul class="text-green-700 space-y-2 text-sm">
+                                <li>• Data has outliers or extremes</li>
+                                <li>• You want the typical performance</li>
+                                <li>• Data is skewed</li>
+                                <li>• Evaluating consistency</li>
+                                <li>• Performance benchmarking</li>
+                            </ul>
+                            <div class="mt-4 p-3 bg-white rounded-lg">
+                                <p class="text-xs text-green-800">
+                                    <strong>Example:</strong> Typical pass completion rate (ignores bad games)
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6">
+                            <h3 class="text-xl font-semibold text-purple-900 mb-4">🔥 Use Mode When...</h3>
+                            <ul class="text-purple-700 space-y-2 text-sm">
+                                <li>• Working with categorical data</li>
+                                <li>• Finding most common outcomes</li>
+                                <li>• Identifying patterns</li>
+                                <li>• Understanding preferences</li>
+                                <li>• Frequency analysis</li>
+                            </ul>
+                            <div class="mt-4 p-3 bg-white rounded-lg">
+                                <p class="text-xs text-purple-800">
+                                    <strong>Example:</strong> Most common scoreline or formation used
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Quick Quiz -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Quick Check</h3>
+                    <div id="quiz-container">
+                        <div class="quiz-question mb-4">
+                            <p class="font-medium text-gray-900 mb-3">A player has these pass completion rates: 85%, 45%, 88%, 90%, 87%. Which average best represents their typical performance?</p>
+                            <div class="space-y-2">
+                                <button class="quiz-option w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-gray-100" 
+                                        onclick="selectAnswer(this, false)">
+                                    A) Mean (79%) - includes the poor game
+                                </button>
+                                <button class="quiz-option w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-gray-100" 
+                                        onclick="selectAnswer(this, true)">
+                                    B) Median (87%) - ignores the outlier
+                                </button>
+                                <button class="quiz-option w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-gray-100" 
+                                        onclick="selectAnswer(this, false)">
+                                    C) Mode (no mode) - not applicable
+                                </button>
+                                <button class="quiz-option w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-gray-100" 
+                                        onclick="selectAnswer(this, false)">
+                                    D) All averages are equally good
+                                </button>
+                            </div>
+                            <div id="quiz-feedback" class="mt-4 p-3 rounded-lg hidden"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Terms -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Key Terms</h3>
+                    <div class="space-y-4">
+                        <div class="border-b border-gray-200 pb-3">
+                            <h4 class="font-semibold text-gray-900">Mean</h4>
+                            <p class="text-sm text-gray-600">Arithmetic average (sum ÷ count)</p>
+                        </div>
+                        <div class="border-b border-gray-200 pb-3">
+                            <h4 class="font-semibold text-gray-900">Median</h4>
+                            <p class="text-sm text-gray-600">Middle value when ordered</p>
+                        </div>
+                        <div class="border-b border-gray-200 pb-3">
+                            <h4 class="font-semibold text-gray-900">Mode</h4>
+                            <p class="text-sm text-gray-600">Most frequent value</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Outlier</h4>
+                            <p class="text-sm text-gray-600">Extreme value that differs significantly</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Tracker -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Lesson Progress</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-purple-500 rounded-full mr-3"></div>
+                            <span class="text-sm text-gray-700">Theory Complete</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-purple-500 rounded-full mr-3"></div>
+                            <span class="text-sm text-gray-700">Calculator Used</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-gray-300 rounded-full mr-3"></div>
+                            <span class="text-sm text-gray-700">Quiz Completed</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-gray-300 rounded-full mr-3"></div>
+                            <span class="text-sm text-gray-700">Ready for Next Lesson</span>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="bg-gray-200 rounded-full h-2">
+                            <div class="bg-purple-600 h-2 rounded-full" style="width: 75%"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">75% Complete</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex justify-between">
+            <a href="stats-lesson2.html" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                ← Data Types
+            </a>
+            <button onclick="completeLesson()" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                Complete Lesson →
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz functionality
+        function selectAnswer(button, isCorrect) {
+            // Remove previous selections
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Mark selected answer
+            button.classList.add('selected');
+            
+            // Show feedback
+            const feedback = document.getElementById('quiz-feedback');
+            if (isCorrect) {
+                button.classList.add('correct');
+                feedback.innerHTML = '<i class="fas fa-check-circle text-green-500 mr-2"></i>Correct! The median (87%) better represents typical performance because it ignores the outlier (45% game).';
+                feedback.className = 'mt-4 p-3 rounded-lg bg-green-50 text-green-800 border border-green-200';
+            } else {
+                button.classList.add('incorrect');
+                feedback.innerHTML = '<i class="fas fa-times-circle text-red-500 mr-2"></i>Not quite right. The correct answer is B - the median better represents typical performance by ignoring outliers.';
+                feedback.className = 'mt-4 p-3 rounded-lg bg-red-50 text-red-800 border border-red-200';
+            }
+            feedback.classList.remove('hidden');
+        }
+
+        function calculateAverages() {
+            const goalsInput = document.getElementById('goals-input').value;
+            const shotsInput = document.getElementById('shots-input').value;
+            
+            if (!goalsInput || !shotsInput) return;
+            
+            try {
+                const goals = goalsInput.split(',').map(x => parseFloat(x.trim())).filter(x => !isNaN(x));
+                const shots = shotsInput.split(',').map(x => parseFloat(x.trim())).filter(x => !isNaN(x));
+                
+                if (goals.length === 0 || shots.length === 0) return;
+                
+                // Calculate means
+                const meanGoals = (goals.reduce((a, b) => a + b, 0) / goals.length).toFixed(2);
+                const meanShots = (shots.reduce((a, b) => a + b, 0) / shots.length).toFixed(2);
+                
+                // Calculate medians
+                const sortedGoals = [...goals].sort((a, b) => a - b);
+                const sortedShots = [...shots].sort((a, b) => a - b);
+                const medianGoals = calculateMedian(sortedGoals);
+                const medianShots = calculateMedian(sortedShots);
+                
+                // Calculate modes
+                const modeGoals = calculateMode(goals);
+                const modeShots = calculateMode(shots);
+                
+                // Update display
+                document.getElementById('mean-goals').textContent = meanGoals;
+                document.getElementById('median-goals').textContent = medianGoals;
+                document.getElementById('mode-goals').textContent = modeGoals;
+                document.getElementById('mean-shots').textContent = meanShots;
+                document.getElementById('median-shots').textContent = medianShots;
+                document.getElementById('mode-shots').textContent = modeShots;
+                
+                // Generate analysis
+                generateAnalysis(goals, shots, meanGoals, medianGoals, modeGoals, meanShots, medianShots, modeShots);
+                
+            } catch (error) {
+                console.error('Error calculating averages:', error);
+            }
+        }
+
+        function calculateMedian(sortedArray) {
+            const mid = Math.floor(sortedArray.length / 2);
+            return sortedArray.length % 2 !== 0 
+                ? sortedArray[mid].toFixed(2)
+                : ((sortedArray[mid - 1] + sortedArray[mid]) / 2).toFixed(2);
+        }
+
+        function calculateMode(array) {
+            const frequency = {};
+            let maxFreq = 0;
+            let mode = 'No mode';
+            
+            array.forEach(value => {
+                frequency[value] = (frequency[value] || 0) + 1;
+                if (frequency[value] > maxFreq) {
+                    maxFreq = frequency[value];
+                    mode = value;
+                }
+            });
+            
+            return maxFreq > 1 ? mode.toFixed(2) : 'No mode';
+        }
+
+        function generateAnalysis(goals, shots, meanG, medianG, modeG, meanS, medianS, modeS) {
+            const analysisDiv = document.getElementById('analysis-text');
+            let analysis = [];
+            
+            // Goals analysis
+            if (Math.abs(parseFloat(meanG) - parseFloat(medianG)) > 0.3) {
+                if (parseFloat(meanG) > parseFloat(medianG)) {
+                    analysis.push("⚽ Goals: Mean > Median suggests some high-scoring games (outliers)");
+                } else {
+                    analysis.push("⚽ Goals: Median > Mean suggests some low-scoring games");
+                }
+            } else {
+                analysis.push("⚽ Goals: Mean and median are close - consistent goal scoring");
+            }
+            
+            // Shots analysis
+            if (Math.abs(parseFloat(meanS) - parseFloat(medianS)) > 0.5) {
+                if (parseFloat(meanS) > parseFloat(medianS)) {
+                    analysis.push("🎯 Shots: Mean > Median suggests some games with many shots");
+                } else {
+                    analysis.push("🎯 Shots: Median > Mean suggests some games with few shots");
+                }
+            } else {
+                analysis.push("🎯 Shots: Mean and median are close - consistent shot taking");
+            }
+            
+            // Efficiency analysis
+            const efficiency = (goals.reduce((a, b) => a + b, 0) / shots.reduce((a, b) => a + b, 0) * 100).toFixed(1);
+            analysis.push(`📈 Shooting Efficiency: ${efficiency}% (Goals/Shots)`);
+            
+            // Consistency analysis
+            const goalVariance = calculateVariance(goals);
+            const shotVariance = calculateVariance(shots);
+            
+            if (goalVariance < 1) {
+                analysis.push("🎯 Goal scoring: Very consistent performer");
+            } else if (goalVariance < 2) {
+                analysis.push("⚽ Goal scoring: Moderately consistent");
+            } else {
+                analysis.push("🎲 Goal scoring: Inconsistent - streaky player");
+            }
+            
+            analysisDiv.innerHTML = analysis.map(item => `<p>${item}</p>`).join('');
+        }
+
+        function calculateVariance(array) {
+            const mean = array.reduce((a, b) => a + b, 0) / array.length;
+            const variance = array.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / array.length;
+            return variance;
+        }
+
+        function completeLesson() {
+            // Update progress
+            let progress = JSON.parse(localStorage.getItem('statsProgress') || '{"intro": 0, "data": 0, "averages": 0, "viz": 0, "prob": 0, "assessment": 0}');
+            progress.averages = 100;
+            localStorage.setItem('statsProgress', JSON.stringify(progress));
+            
+            // Navigate to next lesson
+            window.location.href = 'stats-lesson4.html';
+        }
+
+        // Initialize with example data
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('goals-input').value = '1, 0, 2, 1, 0, 3, 1';
+            document.getElementById('shots-input').value = '4, 2, 5, 3, 1, 6, 4';
+            calculateAverages();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability & xG | Statistics Curriculum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.0.3/plotly.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-bg { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .quiz-option { transition: all 0.3s ease; }
+        .quiz-option:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .quiz-option.selected { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .quiz-option.correct { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .quiz-option.incorrect { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .probability-demo { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        .xg-calculator { transition: all 0.3s ease; }
+        .xg-calculator:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+        .correlation-demo { background: linear-gradient(45deg, #f3f4f6, #e5e7eb); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <a href="stats-index.html" class="text-xl font-bold text-gray-900">📊 Football Analytics Academy</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-8">
+                    <a href="stats-index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                    <a href="stats-lesson1.html" class="text-gray-700 hover:text-blue-600 font-medium">Introduction</a>
+                    <a href="stats-lesson2.html" class="text-gray-700 hover:text-green-600 font-medium">Data Types</a>
+                    <a href="stats-lesson3.html" class="text-gray-700 hover:text-purple-600 font-medium">Averages</a>
+                    <a href="stats-lesson4.html" class="text-gray-700 hover:text-orange-600 font-medium">Visualizations</a>
+                    <a href="#" class="text-red-600 font-medium">Probability</a>
+                    <a href="stats-assessment.html" class="text-gray-700 hover:text-gray-600 font-medium">Assessment</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+            <h1 class="text-4xl md:text-6xl font-black mb-4">Probability & Expected Goals</h1>
+            <p class="text-xl md:text-2xl mb-6">Understanding Chance and Quality in Football</p>
+            <div class="bg-white bg-opacity-20 rounded-lg p-4 inline-block">
+                <p class="text-lg font-medium">"Football is a game of probabilities - xG helps us measure the quality of chances."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Theory Section -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Core Concept -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Introduction to Probability</h2>
+                    <div class="space-y-6">
+                        <div class="concept-card bg-red-50 rounded-lg p-6">
+                            <h3 class="text-xl font-semibold text-red-900 mb-3">What is Probability?</h3>
+                            <p class="text-red-700 leading-relaxed">
+                                Probability measures how likely an event is to occur, ranging from 0 (impossible) to 1 (certain). 
+                                In football, we use probability to predict outcomes like scoring chances, match results, and player performance.
+                            </p>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h4 class="font-semibold text-gray-900 mb-3">🎯 Basic Probability</h4>
+                                <p class="text-gray-700 text-sm mb-3">
+                                    Probability = (Number of favorable outcomes) ÷ (Total possible outcomes)
+                                </p>
+                                <div class="bg-white p-3 rounded-lg">
+                                    <p class="text-xs text-gray-800">
+                                        <strong>Example:</strong> Probability of heads in coin toss = 1 ÷ 2 = 0.5
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h4 class="font-semibold text-gray-900 mb-3">📊 Football Probability</h4>
+                                <p class="text-gray-700 text-sm mb-3">
+                                    Applied to football scenarios like penalty success rates or match outcomes
+                                </p>
+                                <div class="bg-white p-3 rounded-lg">
+                                    <p class="text-xs text-gray-800">
+                                        <strong>Example:</strong> Penalty conversion rate = 75% = 0.75 probability
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Probability Demo -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Interactive Probability Simulator</h2>
+                    <div class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Scenario:</label>
+                                    <select id="probability-scenario" class="w-full p-3 border border-gray-300 rounded-lg" onchange="updateProbabilityDemo()">
+                                        <option value="penalty">Penalty Kick</option>
+                                        <option value="corner">Corner Kick Goal</option>
+                                        <option value="shot">Shot from Distance</option>
+                                        <option value="freekick">Direct Free Kick</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Number of Trials:</label>
+                                    <input type="range" id="trials-slider" min="10" max="100" value="50" 
+                                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                           onchange="updateProbabilityDemo()">
+                                    <span id="trials-value" class="text-sm text-gray-600">50 trials</span>
+                                </div>
+                                <div class="bg-blue-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-blue-900 mb-2">Theoretical Probability:</h4>
+                                    <p class="text-blue-700">Expected Success Rate: <span id="theoretical-prob" class="font-bold">75%</span></p>
+                                    <p class="text-blue-700">Expected Successes: <span id="expected-successes" class="font-bold">38</span></p>
+                                </div>
+                            </div>
+                            <div class="bg-gray-100 rounded-lg p-6">
+                                <h4 class="font-semibold text-gray-900 mb-4">Simulation Results</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-700">Total Trials:</span>
+                                        <span id="total-trials" class="font-bold text-gray-900">50</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-700">Successful:</span>
+                                        <span id="successful-trials" class="font-bold text-green-600">-</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-700">Failed:</span>
+                                        <span id="failed-trials" class="font-bold text-red-600">-</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-700">Actual Rate:</span>
+                                        <span id="actual-rate" class="font-bold text-blue-600">-</span>
+                                    </div>
+                                </div>
+                                <button onclick="runSimulation()" class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    🎲 Run Simulation
+                                </button>
+                            </div>
+                        </div>
+                        <div id="probability-chart" class="h-64"></div>
+                    </div>
+                </div>
+
+                <!-- Expected Goals (xG) -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Expected Goals (xG) Explained</h2>
+                    <div class="space-y-6">
+                        <div class="border-l-4 border-green-500 pl-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-3">What is xG?</h3>
+                            <p class="text-gray-700 mb-4">
+                                Expected Goals (xG) measures the quality of a scoring chance by calculating the probability that a shot will result in a goal 
+                                based on historical data from similar shots. Each shot is assigned an xG value between 0 and 1.
+                            </p>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <p class="text-sm text-green-800">
+                                    <strong>xG = 0.3</strong> means that 3 out of 10 similar shots would typically result in a goal (30% chance)
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h4 class="font-semibold text-gray-900 mb-3">⚽ Factors Affecting xG</h4>
+                                <ul class="text-gray-700 text-sm space-y-2">
+                                    <li>• Distance from goal</li>
+                                    <li>• Angle to the goal</li>
+                                    <li>• Body part used (foot/head)</li>
+                                    <li>• Type of assist</li>
+                                    <li>• Defensive pressure</li>
+                                    <li>• Goalkeeper position</li>
+                                </ul>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h4 class="font-semibold text-gray-900 mb-3">📊 xG Applications</h4>
+                                <ul class="text-gray-700 text-sm space-y-2">
+                                    <li>• Evaluate shot quality</li>
+                                    <li>• Assess finishing ability</li>
+                                    <li>• Predict future performance</li>
+                                    <li>• Analyze team tactics</li>
+                                    <li>• Scout player potential</li>
+                                    <li>• Post-match analysis</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- xG Calculator -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Interactive xG Calculator</h2>
+                    <div class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Shot Distance (meters):</label>
+                                    <input type="range" id="distance-slider" min="5" max="40" value="15" 
+                                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                           onchange="calculateXG()">
+                                    <span id="distance-value" class="text-sm text-gray-600">15 meters</span>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Angle to Goal (degrees):</label>
+                                    <input type="range" id="angle-slider" min="0" max="90" value="45" 
+                                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                           onchange="calculateXG()">
+                                    <span id="angle-value" class="text-sm text-gray-600">45°</span>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Body Part:</label>
+                                    <select id="body-part" class="w-full p-2 border border-gray-300 rounded" onchange="calculateXG()">
+                                        <option value="foot">Right Foot</option>
+                                        <option value="foot">Left Foot</option>
+                                        <option value="head">Header</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Defensive Pressure:</label>
+                                    <select id="pressure" class="w-full p-2 border border-gray-300 rounded" onchange="calculateXG()">
+                                        <option value="none">No pressure</option>
+                                        <option value="low">Low pressure</option>
+                                        <option value="medium">Medium pressure</option>
+                                        <option value="high">High pressure</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="xg-calculator bg-blue-50 rounded-lg p-6">
+                                <h4 class="font-semibold text-blue-900 mb-4">xG Calculation Results</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-blue-700">Base xG (distance & angle):</span>
+                                        <span id="base-xg" class="font-bold text-blue-900">0.25</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-blue-700">Body part modifier:</span>
+                                        <span id="body-modifier" class="font-bold text-blue-900">1.0</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-blue-700">Pressure modifier:</span>
+                                        <span id="pressure-modifier" class="font-bold text-blue-900">1.0</span>
+                                    </div>
+                                    <div class="border-t border-blue-200 pt-3">
+                                        <div class="flex justify-between">
+                                            <span class="text-blue-700 font-semibold">Final xG:</span>
+                                            <span id="final-xg" class="font-bold text-2xl text-blue-900">0.25</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-3 bg-white rounded-lg">
+                                    <p id="xg-interpretation" class="text-sm text-blue-800">
+                                        This is a moderate quality chance - roughly 1 in 4 similar shots would result in a goal.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="xg-visualization" class="h-64"></div>
+                    </div>
+                </div>
+
+                <!-- Correlation Analysis -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Understanding Correlation</h2>
+                    <div class="space-y-6">
+                        <div class="border-l-4 border-purple-500 pl-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-3">What is Correlation?</h3>
+                            <p class="text-gray-700 mb-4">
+                                Correlation measures the relationship between two variables. In football, we might examine if possession correlates with winning, 
+                                or if shots correlate with goals. Correlation ranges from -1 (perfect negative) to +1 (perfect positive).
+                            </p>
+                            <div class="bg-purple-50 p-4 rounded-lg">
+                                <p class="text-sm text-purple-800">
+                                    <strong>Important:</strong> Correlation does not imply causation! Just because two things are related doesn't mean one causes the other.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="correlation-demo rounded-lg p-6">
+                                <h4 class="font-semibold text-gray-900 mb-3">📈 Positive Correlation</h4>
+                                <p class="text-gray-700 text-sm mb-3">As one variable increases, the other tends to increase</p>
+                                <div class="bg-green-100 p-3 rounded-lg">
+                                    <p class="text-xs text-green-800">
+                                        <strong>Example:</strong> Shots vs Goals (more shots usually means more goals)
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="correlation-demo rounded-lg p-6">
+                                <h4 class="font-semibold text-gray-900 mb-3">📉 Negative Correlation</h4>
+                                <p class="text-gray-700 text-sm mb-3">As one variable increases, the other tends to decrease</p>
+                                <div class="bg-red-100 p-3 rounded-lg">
+                                    <p class="text-xs text-red-800">
+                                        <strong>Example:</strong> Distance from goal vs xG (further away = lower xG)
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="correlation-demo rounded-lg p-6">
+                                <h4 class="font-semibold text-gray-900 mb-3">➖ No Correlation</h4>
+                                <p class="text-gray-700 text-sm mb-3">No clear relationship between variables</p>
+                                <div class="bg-gray-100 p-3 rounded-lg">
+                                    <p class="text-xs text-gray-800">
+                                        <strong>Example:</strong> Player height vs passing accuracy
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Correlation Explorer -->
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <h4 class="font-semibold text-gray-900 mb-4">Correlation Explorer</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">X-Axis Variable:</label>
+                                    <select id="x-variable" class="w-full p-2 border border-gray-300 rounded" onchange="updateCorrelation()">
+                                        <option value="possession">Possession %</option>
+                                        <option value="shots">Total Shots</option>
+                                        <option value="passes">Passes Completed</option>
+                                        <option value="distance">Distance Covered (km)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Y-Axis Variable:</label>
+                                    <select id="y-variable" class="w-full p-2 border border-gray-300 rounded" onchange="updateCorrelation()">
+                                        <option value="goals">Goals Scored</option>
+                                        <option value="wins">Matches Won</option>
+                                        <option value="xg">Total xG</option>
+                                        <option value="points">League Points</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="correlation-chart" class="h-80 mt-4"></div>
+                            <div class="mt-4 p-3 bg-white rounded-lg">
+                                <p id="correlation-analysis" class="text-sm text-gray-700">
+                                    Select variables to explore their correlation in football data.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Quick Quiz -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Quick Check</h3>
+                    <div id="quiz-container">
+                        <div class="quiz-question mb-4">
+                            <p class="font-medium text-gray-900 mb-3">If a shot has an xG of 0.3, what does this mean?</p>
+                            <div class="space-y-2">
+                                <button class="quiz-option w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-gray-100" 
+                                        onclick="selectAnswer(this, false)">
+                                    A) The shot will definitely result in a goal
+                                </button>
+                                <button class="quiz-option w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-gray-100" 
+                                        onclick="selectAnswer(this, true)">
+                                    B) Similar shots result in goals 30% of the time
+                                </button>
+                                <button class="quiz-option w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-gray-100" 
+                                        onclick="selectAnswer(this, false)">
+                                    C) The player has a 30% chance of scoring this season
+                                </button>
+                                <button class="quiz-option w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-gray-100" 
+                                        onclick="selectAnswer(this, false)">
+                                    D) The shot is 30% as good as a penalty
+                                </button>
+                            </div>
+                            <div id="quiz-feedback" class="mt-4 p-3 rounded-lg hidden"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Terms -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Key Terms</h3>
+                    <div class="space-y-4">
+                        <div class="border-b border-gray-200 pb-3">
+                            <h4 class="font-semibold text-gray-900">Probability</h4>
+                            <p class="text-sm text-gray-600">Likelihood of an event occurring (0 to 1)</p>
+                        </div>
+                        <div class="border-b border-gray-200 pb-3">
+                            <h4 class="font-semibold text-gray-900">xG</h4>
+                            <p class="text-sm text-gray-600">Expected Goals - quality measure for shots</p>
+                        </div>
+                        <div class="border-b border-gray-200 pb-3">
+                            <h4 class="font-semibold text-gray-900">Correlation</h4>
+                            <p class="text-sm text-gray-600">Relationship between two variables (-1 to +1)</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Causation</h4>
+                            <p class="text-sm text-gray-600">When one variable directly affects another</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Tracker -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Lesson Progress</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-red-500 rounded-full mr-3"></div>
+                            <span class="text-sm text-gray-700">Theory Complete</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-red-500 rounded-full mr-3"></div>
+                            <span class="text-sm text-gray-700">xG Calculator Used</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-gray-300 rounded-full mr-3"></div>
+                            <span class="text-sm text-gray-700">Quiz Completed</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-gray-300 rounded-full mr-3"></div>
+                            <span class="text-sm text-gray-700">Ready for Assessment</span>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="bg-gray-200 rounded-full h-2">
+                            <div class="bg-red-600 h-2 rounded-full" style="width: 75%"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">75% Complete</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex justify-between">
+            <a href="stats-lesson4.html" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                ← Visualizations
+            </a>
+            <button onclick="completeLesson()" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors">
+                Complete Lesson →
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Probability scenarios
+        const probabilityScenarios = {
+            penalty: { probability: 0.75, description: 'Penalty kicks have about a 75% conversion rate in professional football.' },
+            corner: { probability: 0.03, description: 'Corners result in goals approximately 3% of the time.' },
+            shot: { probability: 0.10, description: 'Average shots from open play have about a 10% chance of scoring.' },
+            freekick: { probability: 0.08, description: 'Direct free kicks result in goals about 8% of the time.' }
+        };
+
+        // xG calculation factors
+        const xgFactors = {
+            distance: { 5: 0.9, 10: 0.6, 15: 0.35, 20: 0.2, 25: 0.12, 30: 0.08, 35: 0.05, 40: 0.03 },
+            angle: { 0: 1.2, 15: 1.1, 30: 1.0, 45: 0.9, 60: 0.7, 75: 0.5, 90: 0.3 },
+            bodyPart: { foot: 1.0, head: 0.75, other: 0.6 },
+            pressure: { none: 1.0, low: 0.9, medium: 0.75, high: 0.6 }
+        };
+
+        // Quiz functionality
+        function selectAnswer(button, isCorrect) {
+            // Remove previous selections
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Mark selected answer
+            button.classList.add('selected');
+            
+            // Show feedback
+            const feedback = document.getElementById('quiz-feedback');
+            if (isCorrect) {
+                button.classList.add('correct');
+                feedback.innerHTML = '<i class="fas fa-check-circle text-green-500 mr-2"></i>Correct! An xG of 0.3 means that historically, 30% of similar shots have resulted in goals.';
+                feedback.className = 'mt-4 p-3 rounded-lg bg-green-50 text-green-800 border border-green-200';
+            } else {
+                button.classList.add('incorrect');
+                feedback.innerHTML = '<i class="fas fa-times-circle text-red-500 mr-2"></i>Not quite right. The correct answer is B - xG represents the historical success rate of similar shots.';
+                feedback.className = 'mt-4 p-3 rounded-lg bg-red-50 text-red-800 border border-red-200';
+            }
+            feedback.classList.remove('hidden');
+        }
+
+        function updateProbabilityDemo() {
+            const scenario = document.getElementById('probability-scenario').value;
+            const trials = document.getElementById('trials-slider').value;
+            const probData = probabilityScenarios[scenario];
+            
+            document.getElementById('trials-value').textContent = trials + ' trials';
+            document.getElementById('theoretical-prob').textContent = (probData.probability * 100).toFixed(0) + '%';
+            document.getElementById('expected-successes').textContent = Math.round(trials * probData.probability);
+        }
+
+        function runSimulation() {
+            const scenario = document.getElementById('probability-scenario').value;
+            const trials = parseInt(document.getElementById('trials-slider').value);
+            const probability = probabilityScenarios[scenario].probability;
+            
+            let successes = 0;
+            for (let i = 0; i < trials; i++) {
+                if (Math.random() < probability) {
+                    successes++;
+                }
+            }
+            
+            const failures = trials - successes;
+            const actualRate = (successes / trials * 100).toFixed(1);
+            
+            document.getElementById('total-trials').textContent = trials;
+            document.getElementById('successful-trials').textContent = successes;
+            document.getElementById('failed-trials').textContent = failures;
+            document.getElementById('actual-rate').textContent = actualRate + '%';
+            
+            // Update chart
+            updateProbabilityChart(trials, successes, failures);
+        }
+
+        function updateProbabilityChart(trials, successes, failures) {
+            const trace = {
+                x: ['Successful', 'Failed'],
+                y: [successes, failures],
+                type: 'bar',
+                marker: {
+                    color: ['#10b981', '#ef4444']
+                },
+                text: [successes, failures],
+                textposition: 'auto'
+            };
+
+            const layout = {
+                title: `Simulation Results (${trials} trials)`,
+                yaxis: { title: 'Count' },
+                showlegend: false,
+                font: { family: 'Inter, sans-serif' }
+            };
+
+            Plotly.newPlot('probability-chart', [trace], layout, {displayModeBar: false});
+        }
+
+        function calculateXG() {
+            const distance = parseInt(document.getElementById('distance-slider').value);
+            const angle = parseInt(document.getElementById('angle-slider').value);
+            const bodyPart = document.getElementById('body-part').value;
+            const pressure = document.getElementById('pressure').value;
+            
+            document.getElementById('distance-value').textContent = distance + ' meters';
+            document.getElementById('angle-value').textContent = angle + '°';
+            
+            // Calculate base xG from distance
+            let baseXG = 0.02; // minimum xG
+            for (let d in xgFactors.distance) {
+                if (distance <= parseInt(d)) {
+                    baseXG = xgFactors.distance[d];
+                    break;
+                }
+            }
+            
+            // Apply angle modifier
+            let angleModifier = 0.3;
+            for (let a in xgFactors.angle) {
+                if (angle <= parseInt(a)) {
+                    angleModifier = xgFactors.angle[a];
+                    break;
+                }
+            }
+            
+            baseXG *= angleModifier;
+            
+            // Apply body part modifier
+            const bodyModifier = xgFactors.bodyPart[bodyPart];
+            
+            // Apply pressure modifier
+            const pressureModifier = xgFactors.pressure[pressure];
+            
+            // Calculate final xG
+            const finalXG = baseXG * bodyModifier * pressureModifier;
+            
+            // Update display
+            document.getElementById('base-xg').textContent = baseXG.toFixed(3);
+            document.getElementById('body-modifier').textContent = bodyModifier.toFixed(2);
+            document.getElementById('pressure-modifier').textContent = pressureModifier.toFixed(2);
+            document.getElementById('final-xg').textContent = finalXG.toFixed(3);
+            
+            // Update interpretation
+            let interpretation = '';
+            if (finalXG > 0.5) {
+                interpretation = 'This is a high-quality chance - more than 50% of similar shots result in goals!';
+            } else if (finalXG > 0.2) {
+                interpretation = 'This is a moderate quality chance - roughly 1 in 5 similar shots would result in a goal.';
+            } else if (finalXG > 0.1) {
+                interpretation = 'This is a low-quality chance - about 1 in 10 similar shots result in goals.';
+            } else {
+                interpretation = 'This is a very low-quality chance - less than 1 in 10 similar shots result in goals.';
+            }
+            document.getElementById('xg-interpretation').textContent = interpretation;
+            
+            // Update visualization
+            updateXGVisualization(finalXG);
+        }
+
+        function updateXGVisualization(xg) {
+            const trace = {
+                x: ['Current Shot'],
+                y: [xg],
+                type: 'bar',
+                marker: {
+                    color: xg > 0.5 ? '#10b981' : xg > 0.2 ? '#f59e0b' : '#ef4444'
+                },
+                text: [xg.toFixed(3)],
+                textposition: 'auto'
+            };
+
+            const layout = {
+                title: 'Shot Quality (xG)',
+                yaxis: { title: 'xG Value', range: [0, 1] },
+                showlegend: false,
+                font: { family: 'Inter, sans-serif' }
+            };
+
+            Plotly.newPlot('xg-visualization', [trace], layout, {displayModeBar: false});
+        }
+
+        function updateCorrelation() {
+            const xVar = document.getElementById('x-variable').value;
+            const yVar = document.getElementById('y-variable').value;
+            
+            // Generate sample correlation data
+            const n = 20;
+            const x = Array.from({length: n}, () => Math.random() * 100);
+            const correlation = Math.random() * 2 - 1; // -1 to 1
+            const y = x.map(xi => correlation * xi + (1 - Math.abs(correlation)) * Math.random() * 50);
+            
+            const trace = {
+                x: x,
+                y: y,
+                type: 'scatter',
+                mode: 'markers',
+                marker: {
+                    color: '#8b5cf6',
+                    size: 8
+                }
+            };
+
+            const layout = {
+                title: `${xVar} vs ${yVar}`,
+                xaxis: { title: xVar },
+                yaxis: { title: yVar },
+                showlegend: false,
+                font: { family: 'Inter, sans-serif' }
+            };
+
+            Plotly.newPlot('correlation-chart', [trace], layout, {displayModeBar: false});
+            
+            // Update analysis
+            const corrStrength = Math.abs(correlation);
+            let analysis = '';
+            if (corrStrength > 0.7) {
+                analysis = `Strong ${correlation > 0 ? 'positive' : 'negative'} correlation (${correlation.toFixed(2)}) between ${xVar} and ${yVar}.`;
+            } else if (corrStrength > 0.4) {
+                analysis = `Moderate ${correlation > 0 ? 'positive' : 'negative'} correlation (${correlation.toFixed(2)}) between ${xVar} and ${yVar}.`;
+            } else if (corrStrength > 0.2) {
+                analysis = `Weak ${correlation > 0 ? 'positive' : 'negative'} correlation (${correlation.toFixed(2)}) between ${xVar} and ${yVar}.`;
+            } else {
+                analysis = `Very weak correlation (${correlation.toFixed(2)}) between ${xVar} and ${yVar} - essentially no relationship.`;
+            }
+            document.getElementById('correlation-analysis').textContent = analysis;
+        }
+
+        function completeLesson() {
+            // Update progress
+            let progress = JSON.parse(localStorage.getItem('statsProgress') || '{"intro": 0, "data": 0, "averages": 0, "viz": 0, "prob": 0, "assessment": 0}');
+            progress.prob = 100;
+            localStorage.setItem('statsProgress', JSON.stringify(progress));
+            
+            // Navigate to assessment
+            window.location.href = 'stats-assessment.html';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProbabilityDemo();
+            calculateXG();
+            updateCorrelation();
+        });
+    </script>
+</body>
+</html>
