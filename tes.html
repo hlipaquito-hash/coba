@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STEM X Football Academy - Where Science Meets the Beautiful Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .hero-bg {
+      background: linear-gradient(135deg, #166534 0%, #1e3a8a 50%, #3b82f6 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('resources/hero-stem-football.jpg') center/cover;
+      opacity: 0.15;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .particle-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .stat-card {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .program-card {
+      transition: all 0.3s ease;
+      background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .program-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+    }
+
+    .nav-blur {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .scroll-reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.6s ease;
+    }
+
+    .integration-demo {
+      background: linear-gradient(135deg, #f0f9ff 0%, #fef3c7 100%);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full z-50 nav-blur border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-3">
+          <img src="resources/logo.png" alt="STEM+Football Academy Logo" class="h-10 w-10">
+          <span class="text-xl font-bold text-gray-900">STEM X Football Academy</span>
+        </div>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="index.html" class="text-green-600 font-medium border-b-2 border-green-600 pb-1">Home</a>
+          <a href="programs.html" class="text-gray-700 hover:text-green-600 transition-colors">Programs</a>
+          <a href="registration.html" class="text-gray-700 hover:text-green-600 transition-colors">Registrasi</a>
+          <a href="about.html" class="text-gray-700 hover:text-green-600 transition-colors">Tentang Kami</a>
+          <a href="registration.html" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors">Enroll Now</a>
+        </div>
+        <div class="md:hidden">
+          <button id="mobile-menu-btn" class="text-gray-700 hover:text-green-600">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+      <div class="px-4 py-2 space-y-2">
+        <a href="index.html" class="block py-2 text-green-600 font-medium">Home</a>
+        <a href="programs.html" class="block py-2 text-gray-700">Programs</a>
+        <a href="registration.html" class="block py-2 text-gray-700">Registration</a>
+        <a href="about.html" class="block py-2 text-gray-700">About</a>
+        <a href="registration.html" class="block py-2 bg-green-600 text-white px-4 rounded-lg">Enroll Now</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-bg min-h-screen flex items-center pt-16">
+    <canvas id="particle-canvas" class="particle-bg"></canvas>
+    <div class="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="text-white">
+          <h1 class="text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+            coba coba Where Science Meets the
+            <span class="text-yellow-300">Beautiful Game</span>
+          </h1>
+          <p class="text-xl mb-8 text-green-100 leading-relaxed">
+            Revolutionary STEM+Football education that transforms learning through project-based integration.
+            Master mathematics, physics, biology, and technology while developing football skills and teamwork.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 mb-12">
+            <a href="registration.html" class="bg-yellow-400 text-green-900 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-300 transition-colors text-center">
+              Start Your Journey
+            </a>
+            <a href="programs.html" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-green-900 transition-colors text-center">
+              Explore Programs
+            </a>
+          </div>
+          <div class="grid grid-cols-3 gap-6">
+            <div class="stat-card p-4 rounded-lg text-center">
+              <div class="text-2xl font-bold text-yellow-300">95%</div>
+              <div class="text-sm text-green-100">Academic Improvement</div>
+            </div>
+            <div class="stat-card p-4 rounded-lg text-center">
+              <div class="text-2xl font-bold text-yellow-300">85%</div>
+              <div class="text-sm text-green-100">Athletic Enhancement</div>
+            </div>
+            <div class="stat-card p-4 rounded-lg text-center">
+              <div class="text-2xl font-bold text-yellow-300">12:1</div>
+              <div class="text-sm text-green-100">Student Ratio</div>
+            </div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+            <h3 class="text-white text-xl font-semibold mb-6">Why STEM+Football?</h3>
+            <div class="space-y-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-2 h-2 bg-yellow-300 rounded-full"></div>
+                <span class="text-green-100">Context-based learning</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <div class="w-2 h-2 bg-yellow-300 rounded-full"></div>
+                <span class="text-green-100">Dual skill development</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <div class="w-2 h-2 bg-yellow-300 rounded-full"></div>
+                <span class="text-green-100">Real-world applications</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <div class="w-2 h-2 bg-yellow-300 rounded-full"></div>
+                <span class="text-green-100">Enhanced engagement</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEM-Football Integration Showcase -->
+  <section class="py-20 integration-demo">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 scroll-reveal">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">STEM + Football Integration</h2>
+        <p class="text-xl text-gray-600 max-w-4xl mx-auto">
+          Discover how we seamlessly blend academic excellence with athletic development,
+          creating unique learning experiences that inspire both mind and body.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <div class="bg-white p-6 rounded-2xl shadow-lg text-center scroll-reveal">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl">⚽</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Physics & Motion</h3>
+          <p class="text-gray-600 text-sm">
+            Ball trajectory, force calculations, and motion analysis through practical football applications
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-lg text-center scroll-reveal">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl">📊</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Math & Statistics</h3>
+          <p class="text-gray-600 text-sm">
+            Performance metrics, probability analysis, and data interpretation using real match statistics
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-lg text-center scroll-reveal">
+          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl">🧬</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Biology & Nutrition</h3>
+          <p class="text-gray-600 text-sm">
+            Human physiology, nutrition science, and biomechanics for optimal athletic performance
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-lg text-center scroll-reveal">
+          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl">⚙️</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Technology & Engineering</h3>
+          <p class="text-gray-600 text-sm">
+            Equipment design, performance tracking, and sports technology innovation
+          </p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-8 scroll-reveal">
+        <div class="grid lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Real-World Learning</h3>
+            <p class="text-gray-600 mb-6">
+              Our innovative approach transforms abstract STEM concepts into tangible, exciting learning experiences.
+              Students don't just learn about physics - they experience it by analyzing their own football kicks.
+              Mathematics becomes meaningful when calculating optimal team formations and player statistics.
+            </p>
+            <ul class="space-y-3">
+              <li class="flex items-center">
+                <div class="w-2 h-2 bg-green-600 rounded-full mr-3"></div>
+                <span class="text-gray-700">Project-based learning with measurable outcomes</span>
+              </li>
+              <li class="flex items-center">
+                <div class="w-2 h-2 bg-green-600 rounded-full mr-3"></div>
+                <span class="text-gray-700">Data-driven performance analysis</span>
+              </li>
+              <li class="flex items-center">
+                <div class="w-2 h-2 bg-green-600 rounded-full mr-3"></div>
+                <span class="text-gray-700">Collaborative problem-solving in teams</span>
+              </li>
+              <li class="flex items-center">
+                <div class="w-2 h-2 bg-green-600 rounded-full mr-3"></div>
+                <span class="text-gray-700">Technology integration and innovation</span>
+              </li>
+            </ul>
+          </div>
+          <div class="relative">
+            <div id="integration-chart" class="w-full h-80 bg-gray-50 rounded-lg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Programs Overview -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 scroll-reveal">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">Programs for Every Level</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Tailored STEM+Football education programs designed to meet students at their level
+          and guide them toward academic and athletic excellence.
+        </p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="program-card p-8 rounded-2xl shadow-lg scroll-reveal">
+          <div class="mb-6">
+            <img src="resources/elementary-training.jpg" alt="Elementary STEM+Football Program" class="w-full h-48 object-cover rounded-lg">
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Elementary School</h3>
+          <p class="text-gray-600 mb-6">
+            Grades K-6 • Foundation building through playful experiments, basic measurements,
+            and introductory football skills. Spark curiosity and develop coordination.
+          </p>
+          <ul class="space-y-2 mb-6">
+            <li class="flex items-center text-gray-600">
+              <span class="w-2 h-2 bg-green-600 rounded-full mr-3"></span>
+              Fun physics experiments with balls
+            </li>
+            <li class="flex items-center text-gray-600">
+              <span class="w-2 h-2 bg-green-600 rounded-full mr-3"></span>
+              Basic math through game statistics
+            </li>
+            <li class="flex items-center text-gray-600">
+              <span class="w-2 h-2 bg-green-600 rounded-full mr-3"></span>
+              Introduction to teamwork
+            </li>
+          </ul>
+          <a href="programs.html#elementary" class="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+            Learn More
+          </a>
+        </div>
+
+        <div class="program-card p-8 rounded-2xl shadow-lg scroll-reveal">
+          <div class="mb-6">
+            <img src="resources/junior-training.jpg" alt="Junior High STEM+Football Program" class="w-full h-48 object-cover rounded-lg">
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Junior High School</h3>
+          <p class="text-gray-600 mb-6">
+            Grades 7-9 • Intermediate concepts in physics, mathematics, and biology integrated
+            with tactical football training. Build analytical thinking and advanced skills.
+          </p>
+          <ul class="space-y-2 mb-6">
+            <li class="flex items-center text-gray-600">
+              <span class="w-2 h-2 bg-orange-600 rounded-full mr-3"></span>
+              Trajectory and force analysis
+            </li>
+            <li class="flex items-center text-gray-600">
+              <span class="w-2 h-2 bg-orange-600 rounded-full mr-3"></span>
+              Statistical modeling of performance
+            </li>
+            <li class="flex items-center text-gray-600">
+              <span class="w-2 h-2 bg-orange-600 rounded-full mr-3"></span>
+              Biomechanics and nutrition
+            </li>
+          </ul>
+          <a href="programs.html#junior" class="inline-block bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition-colors">
+            Learn More
+          </a>
+        </div>
+
+        <div class="program-card p-8 rounded-2xl shadow-lg scroll-reveal">
+          <div class="mb-6">
+            <img src="resources/students-field.jpg" alt="Senior High STEM+Football Program" class="w-full h-48 object-cover rounded-lg">
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Senior High School</h3>
+          <p class="text-gray-600 mb-6">
+            Grades 10-12 • Advanced placement preparation, research projects, and elite training.
+            Prepare for STEM careers and collegiate athletics.
+          </p>
+          <ul class="space-y-2 mb-6">
+            <li class="flex items-center text-gray-600">
+              <span class="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>
+              AP exam preparation
+            </li>
+            <li class="flex items-center text-gray-600">
+              <span class="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>
+              Independent research projects
+            </li>
+            <li class="flex items-center text-gray-600">
+              <span class="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>
+              Elite performance analysis
+            </li>
+          </ul>
+          <a href="programs.html#senior" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+            Learn More
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits & Performance Metrics -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="scroll-reveal">
+          <h2 class="text-4xl font-bold text-gray-900 mb-6">Proven Results</h2>
+          <p class="text-lg text-gray-600 mb-8">
+            Our integrated approach doesn't just improve academic scores - it transforms how students
+            think about learning. By connecting abstract concepts to real-world football applications,
+            we see dramatic improvements in both academic performance and athletic development.
+          </p>
+          <div class="space-y-6">
+            <div class="flex items-start space-x-4">
+              <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Enhanced Academic Performance</h3>
+                <p class="text-gray-600">Students show 40% improvement in STEM subjects through contextual learning</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-4">
+              <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Athletic Development</h3>
+                <p class="text-gray-600">85% of students show improved coordination, strategy understanding, and physical fitness</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-4">
+              <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Critical Thinking Skills</h3>
+                <p class="text-gray-600">Enhanced problem-solving abilities through data analysis and strategic thinking</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="scroll-reveal">
+          <div id="performance-chart" class="w-full h-96 bg-white rounded-2xl shadow-lg p-6"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Success Stories -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 scroll-reveal">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">Student Success Stories</h2>
+        <p class="text-xl text-gray-600">
+          Hear from our students and parents about their transformative STEM+Football experience.
+        </p>
+      </div>
+      <div class="splide" id="testimonials-slider">
+        <div class="splide__track">
+          <ul class="splide__list">
+            <li class="splide__slide">
+              <div class="bg-gray-50 p-8 rounded-2xl mx-4">
+                <div class="flex items-center mb-6">
+                  <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                    M
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="font-semibold text-gray-900">Marcus Johnson</h4>
+                    <p class="text-gray-600">Grade 8 • Junior High Program</p>
+                  </div>
+                </div>
+                <p class="text-gray-700 mb-4">
+                  "I used to struggle with physics concepts until we started analyzing my football kicks.
+                  Now I understand trajectory, force, and motion because I can see it in action.
+                  My grades improved from C to A, and I made the school team!"
+                </p>
+                <div class="flex text-yellow-400">
+                  <span>★★★★★</span>
+                </div>
+              </div>
+            </li>
+            <li class="splide__slide">
+              <div class="bg-gray-50 p-8 rounded-2xl mx-4">
+                <div class="flex items-center mb-6">
+                  <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                    S
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="font-semibold text-gray-900">Sarah Chen</h4>
+                    <p class="text-gray-600">Parent • Elementary Program</p>
+                  </div>
+                </div>
+                <p class="text-gray-700 mb-4">
+                  "My daughter Emma was always good at math but hated sitting still.
+                  STEM+Football gave her the perfect outlet - she's calculating statistics,
+                  analyzing performance data, and loving every minute of it!"
+                </p>
+                <div class="flex text-yellow-400">
+                  <span>★★★★★</span>
+                </div>
+              </div>
+            </li>
+            <li class="splide__slide">
+              <div class="bg-gray-50 p-8 rounded-2xl mx-4">
+                <div class="flex items-center mb-6">
+                  <div class="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                    A
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="font-semibold text-gray-900">Alex Rodriguez</h4>
+                    <p class="text-gray-600">Grade 11 • Senior High Program</p>
+                  </div>
+                </div>
+                <p class="text-gray-700 mb-4">
+                  "The biomechanics and nutrition courses helped me understand my body better.
+                  I improved my sprint time by 0.3 seconds and my AP Biology score by two letter grades.
+                  This program is game-changing!"
+                </p>
+                <div class="flex text-yellow-400">
+                  <span>★★★★★</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-20 bg-green-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="scroll-reveal">
+        <h2 class="text-4xl font-bold text-white mb-6">Ready to Transform Your Learning?</h2>
+        <p class="text-xl text-green-100 mb-8 max-w-3xl mx-auto">
+          Join hundreds of students who are already experiencing the power of STEM+Football integration.
+          Enroll today and discover your potential both academically and athletically.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="registration.html" class="bg-yellow-400 text-green-900 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-300 transition-colors">
+            Enroll Now
+          </a>
+          <a href="programs.html" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors">
+            View Programs
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-3 mb-4">
+            <img src="resources/logo.png" alt="STEM+Football Academy Logo" class="h-8 w-8">
+            <span class="text-lg font-bold">STEM+Football Academy</span>
+          </div>
+          <p class="text-gray-400">
+            Transforming education through the perfect integration of STEM excellence and football passion.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Programs</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="programs.html#elementary" class="hover:text-white transition-colors">Elementary School</a></li>
+            <li><a href="programs.html#junior" class="hover:text-white transition-colors">Junior High School</a></li>
+            <li><a href="programs.html#senior" class="hover:text-white transition-colors">Senior High School</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="registration.html" class="hover:text-white transition-colors">Registration</a></li>
+            <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+            <li><a href="about.html#contact" class="hover:text-white transition-colors">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
+          <div class="space-y-2 text-gray-400">
+            <p>📧 info@stemfootball.academy</p>
+            <p>📞 (555) 123-4567</p>
+            <p>📍 123 Champions Field, Sports City, SC 12345</p>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 STEM+Football Academy. All rights reserved. Inspiring excellence through integration.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+
+</html>
