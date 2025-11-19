@@ -3,248 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Card Generator - STEM X Football Academy</title>
+    <title>Antigravity Player Card Generator - STEM X Football</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f9fafb; /* Light background */
+            /* Crucial: Must be set to full height for physics */
+            min-height: 100vh;
+            overflow: hidden; /* Hide scrollbars that physics might cause */
+        }
         
-        /* FIFA Card Styling */
+        /* The main container for all physics elements */
+        #physics-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none; /* Allows clicks to fall through to the input form below */
+        }
+
+        /* FIFA Card Styling (Copied from previous turn, slightly simplified) */
         .fut-card {
             width: 300px;
             height: 485px;
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 50%, #92400e 100%); /* Gold Theme */
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 50%, #92400e 100%);
             border-radius: 18px;
-            position: relative;
-            color: #374151;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            position: absolute; /* IMPORTANT: Must be absolute for Matter.js to position it */
+            color: #4b2c05;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             border: 2px solid #fcd34d;
-            transition: transform 0.3s ease;
+            z-index: 10;
+            pointer-events: auto; /* Allow the card itself to be dragged/clicked */
+        }
+        
+        /* Input Form container - must be on top of the physics layer */
+        #input-controls {
+            position: fixed; /* Fixes it in place relative to the viewport */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 50; /* Ensure it is above the physics elements */
+            width: 90%;
+            max-width: 450px;
+            pointer-events: auto; /* Ensure inputs are clickable */
         }
 
-        .fut-card:hover { transform: translateY(-5px); }
-
-        .card-top {
-            display: flex;
-            padding: 30px 20px 0;
-            color: #4b2c05;
-        }
-
-        .card-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-weight: 800;
-            font-size: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .card-rating { font-size: 2.5rem; }
-        .card-position { font-size: 1.2rem; margin-top: 5px; }
-
-        .card-image-container {
-            width: 160px;
-            height: 160px;
-            margin-left: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .card-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.3));
-        }
-
-        .card-name {
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: #4b2c05;
-            margin-top: -10px;
-            border-bottom: 2px solid rgba(75, 44, 5, 0.2);
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-        }
-
-        .card-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            padding: 0 30px;
-            gap: 5px 20px;
-            color: #4b2c05;
-            font-weight: 600;
-        }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.1rem;
-        }
-
+        .card-rating { font-size: 2.5rem; font-weight: 800; }
+        .card-position { font-size: 1.2rem; margin-top: 5px; font-weight: 800; }
+        .card-name { font-size: 1.5rem; font-weight: 800; text-transform: uppercase; text-align: center; }
+        .card-stats { display: grid; grid-template-columns: 1fr 1fr; padding: 0 30px; }
+        .stat-row { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 600; }
         .stat-label { font-weight: 400; margin-left: 5px; }
 
-        /* Background Pattern */
-        .card-bg-pattern {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1h2v2H1V1zm4 0h2v2H5V1zm4 0h2v2H9V1z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-            z-index: 0;
-            pointer-events: none;
+        /* The canvas where the physics simulation runs will cover the entire screen */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 5;
         }
 
-        .card-content { position: relative; z-index: 1; }
     </style>
 </head>
-<body class="min-h-screen p-8">
+<body>
+    
+    <div id="physics-container"></div>
 
-    <nav class="mb-8">
-        <a href="index.html" class="text-green-700 font-bold hover:underline">← Back to Home</a>
-    </nav>
+    <div id="input-controls" class="bg-white p-8 rounded-2xl shadow-2xl border-4 border-green-600">
+        <h1 class="text-3xl font-bold text-green-800 mb-2 text-center">Antigravity Card Generator</h1>
+        <p class="text-gray-600 mb-8 text-center">Type your stats and watch the card fall! Click & drag the card to throw it!</p>
 
-    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-start">
+        <form id="cardForm" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Player Name</label>
+                    <input type="text" id="inputName" value="STUDENT" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Position</label>
+                    <select id="inputPos" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                        <option value="ST">ST</option>
+                        <option value="RW">RW</option>
+                        <option value="CAM">CAM</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Performance Stats (0-99)</label>
+                <div class="grid grid-cols-3 gap-3">
+                    <input type="number" class="stat-input w-full border rounded px-2 py-1" data-target="pac" value="85" max="99" min="0" placeholder="PAC">
+                    <input type="number" class="stat-input w-full border rounded px-2 py-1" data-target="sho" value="78" max="99" min="0" placeholder="SHO">
+                    <input type="number" class="stat-input w-full border rounded px-2 py-1" data-target="pas" value="82" max="99" min="0" placeholder="PAS">
+                    <input type="number" class="stat-input w-full border rounded px-2 py-1" data-target="dri" value="88" max="99" min="0" placeholder="DRI">
+                    <input type="number" class="stat-input w-full border rounded px-2 py-1" data-target="def" value="45" max="99" min="0" placeholder="DEF">
+                    <input type="number" class="stat-input w-full border rounded px-2 py-1" data-target="phy" value="70" max="99" min="0" placeholder="PHY">
+                </div>
+            </div>
+
+        </form>
         
-        <div class="bg-white p-8 rounded-2xl shadow-lg">
-            <h1 class="text-3xl font-bold text-green-800 mb-2">Create Your Player Card</h1>
-            <p class="text-gray-600 mb-8">Enter your stats from the training session to generate your official Academy Card.</p>
+        <button onclick="downloadCard()" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-xl">
+            Download Card (Stops Gravity)
+        </button>
+    </div>
 
-            <form id="cardForm" class="space-y-6">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Player Name</label>
-                        <input type="text" id="inputName" value="STUDENT" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Position</label>
-                        <select id="inputPos" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 outline-none">
-                            <option value="ST">ST - Striker</option>
-                            <option value="RW">RW - Winger</option>
-                            <option value="CAM">CAM - Midfield</option>
-                            <option value="CB">CB - Defender</option>
-                            <option value="GK">GK - Goalkeeper</option>
-                        </select>
-                    </div>
+    <div id="playerCard" class="fut-card">
+        <div class="card-content p-4">
+            <div class="card-top flex justify-between items-start mb-2">
+                <div class="card-info flex flex-col items-center">
+                    <span class="card-rating" id="dispRating">80</span>
+                    <span class="card-position" id="dispPos">ST</span>
                 </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Player Photo</label>
-                    <input type="file" id="inputImage" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+                <div class="w-24 h-24 overflow-hidden rounded-full border-2 border-green-700">
+                    <img id="dispImage" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Student" class="w-full h-full object-cover" alt="Player">
                 </div>
+            </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Performance Stats (0-99)</label>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <label class="text-xs text-gray-500">Pace (PAC)</label>
-                            <input type="number" class="stat-input w-full border border-gray-300 rounded px-3 py-1" data-target="pac" value="85" max="99" min="0">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500">Shooting (SHO)</label>
-                            <input type="number" class="stat-input w-full border border-gray-300 rounded px-3 py-1" data-target="sho" value="78" max="99" min="0">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500">Passing (PAS)</label>
-                            <input type="number" class="stat-input w-full border border-gray-300 rounded px-3 py-1" data-target="pas" value="82" max="99" min="0">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500">Dribbling (DRI)</label>
-                            <input type="number" class="stat-input w-full border border-gray-300 rounded px-3 py-1" data-target="dri" value="88" max="99" min="0">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500">Defending (DEF)</label>
-                            <input type="number" class="stat-input w-full border border-gray-300 rounded px-3 py-1" data-target="def" value="45" max="99" min="0">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500">Physical (PHY)</label>
-                            <input type="number" class="stat-input w-full border border-gray-300 rounded px-3 py-1" data-target="phy" value="70" max="99" min="0">
-                        </div>
-                    </div>
-                </div>
+            <div class="card-name mb-4" id="dispName">STUDENT</div>
 
-                <div class="bg-blue-50 p-4 rounded-lg text-sm text-blue-800">
-                    <strong>STEM Lesson:</strong> Overall Rating (OVR) is calculated using the mathematical <em>Mean (Average)</em> of your six core stats.
-                </div>
-            </form>
-            
-            <button onclick="downloadCard()" class="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transform transition hover:scale-105 flex justify-center items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                Download Card
-            </button>
-        </div>
-
-        <div class="flex flex-col items-center justify-center sticky top-8">
-            <h3 class="text-xl font-semibold text-gray-500 mb-4">Live Preview</h3>
-            
-            <div id="playerCard" class="fut-card">
-                <div class="card-bg-pattern"></div>
-                <div class="card-content">
-                    <div class="card-top">
-                        <div class="card-info">
-                            <span class="card-rating" id="dispRating">99</span>
-                            <span class="card-position" id="dispPos">ST</span>
-                        </div>
-                        <div class="card-image-container">
-                            <img id="dispImage" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Student" class="card-image" alt="Player">
-                        </div>
-                    </div>
-
-                    <div class="card-name" id="dispName">STUDENT</div>
-
-                    <div class="card-stats">
-                        <div class="stat-row"><span id="dispPac">85</span> <span class="stat-label">PAC</span></div>
-                        <div class="stat-row"><span id="dispDri">88</span> <span class="stat-label">DRI</span></div>
-                        <div class="stat-row"><span id="dispSho">78</span> <span class="stat-label">SHO</span></div>
-                        <div class="stat-row"><span id="dispDef">45</span> <span class="stat-label">DEF</span></div>
-                        <div class="stat-row"><span id="dispPas">82</span> <span class="stat-label">PAS</span></div>
-                        <div class="stat-row"><span id="dispPhy">70</span> <span class="stat-label">PHY</span></div>
-                    </div>
-                </div>
+            <div class="card-stats">
+                <div class="stat-row"><span id="dispPac">85</span> <span class="stat-label">PAC</span></div>
+                <div class="stat-row"><span id="dispDri">88</span> <span class="stat-label">DRI</span></div>
+                <div class="stat-row"><span id="dispSho">78</span> <span class="stat-label">SHO</span></div>
+                <div class="stat-row"><span id="dispDef">45</span> <span class="stat-label">DEF</span></div>
+                <div class="stat-row"><span id="dispPas">82</span> <span class="stat-label">PAS</span></div>
+                <div class="stat-row"><span class="stat-label">PHY</span><span id="dispPhy">70</span> </div>
             </div>
         </div>
     </div>
 
+
     <script>
-        // --- 1. Live Update Logic ---
+        // --- 1. Card Generator Logic (Adapted for Gravity) ---
         const inputs = {
             name: document.getElementById('inputName'),
             pos: document.getElementById('inputPos'),
-            image: document.getElementById('inputImage'),
             stats: document.querySelectorAll('.stat-input')
         };
-
         const display = {
             name: document.getElementById('dispName'),
             pos: document.getElementById('dispPos'),
             rating: document.getElementById('dispRating'),
-            image: document.getElementById('dispImage'),
-            // Stats are dynamic below
+            // ... other stats
         };
-
+        const cardElement = document.getElementById('playerCard');
+        
         // Update Text Fields
         inputs.name.addEventListener('input', (e) => display.name.textContent = e.target.value || 'STUDENT');
         inputs.pos.addEventListener('change', (e) => display.pos.textContent = e.target.value);
-
-        // Update Image
-        inputs.image.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    display.image.src = e.target.result;
-                }
-                reader.readAsDataURL(file);
-            }
-        });
 
         // Update Stats & Calculate Average
         function updateStats() {
             let total = 0;
             let count = 0;
-
             inputs.stats.forEach(input => {
                 const val = parseInt(input.value) || 0;
                 const targetId = 'disp' + input.dataset.target.charAt(0).toUpperCase() + input.dataset.target.slice(1);
@@ -260,32 +177,20 @@
             const average = Math.round(total / count);
             display.rating.textContent = average;
 
-            // Color Logic: Change card border based on rating
+            // Simple Card Color Logic
             const card = document.getElementById('playerCard');
             if (average >= 90) {
-                card.style.background = 'linear-gradient(135deg, #166534 0%, #15803d 50%, #14532d 100%)'; // Special Green (Elite)
+                card.style.background = 'linear-gradient(135deg, #15803d 0%, #064e3b 100%)'; // Elite Green
                 card.style.borderColor = '#4ade80';
-                card.querySelector('.card-name').style.color = '#ffffff';
-                card.querySelector('.card-stats').style.color = '#ffffff';
-                card.querySelector('.card-top').style.color = '#ffffff';
             } else if (average >= 80) {
-                card.style.background = 'linear-gradient(135deg, #fbbf24 0%, #d97706 50%, #92400e 100%)'; // Gold
+                card.style.background = 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)'; // Gold
                 card.style.borderColor = '#fcd34d';
-                resetTextColors(card, '#4b2c05');
             } else {
-                card.style.background = 'linear-gradient(135deg, #94a3b8 0%, #64748b 50%, #475569 100%)'; // Silver
+                card.style.background = 'linear-gradient(135deg, #94a3b8 0%, #475569 100%)'; // Silver
                 card.style.borderColor = '#cbd5e1';
-                resetTextColors(card, '#1e293b');
             }
         }
 
-        function resetTextColors(card, color) {
-            card.querySelector('.card-name').style.color = color;
-            card.querySelector('.card-stats').style.color = color;
-            card.querySelector('.card-top').style.color = color;
-        }
-
-        // Attach listeners to all stat inputs
         inputs.stats.forEach(input => {
             input.addEventListener('input', updateStats);
         });
@@ -293,19 +198,144 @@
         // Initialize
         updateStats();
 
-        // --- 2. Download Logic ---
-        function downloadCard() {
-            const cardElement = document.getElementById('playerCard');
+
+        // --- 2. Google Antigravity (Matter.js) Logic ---
+        
+        // Modules
+        const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = Matter;
+        let engine, runner, render;
+        let cardBody;
+
+        function initializePhysics() {
+            // 1. Create Engine
+            engine = Engine.create();
+            engine.world.gravity.y = 1; // Standard gravity
+
+            // 2. Create Renderer
+            const container = document.getElementById('physics-container');
+            render = Render.create({
+                element: container,
+                engine: engine,
+                options: {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    wireframes: false, // Use textures/colors, not just lines
+                    background: 'transparent'
+                }
+            });
+            Render.run(render);
+
+            // 3. Create Runner
+            runner = Runner.create();
+            Runner.run(runner, engine);
+
+            // 4. Create Walls (Boundaries)
+            const wallOptions = { isStatic: true, render: { fillStyle: 'transparent' } };
+            const walls = [
+                // Bottom wall
+                Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 50, window.innerWidth, 100, wallOptions),
+                // Left wall
+                Bodies.rectangle(-50, window.innerHeight / 2, 100, window.innerHeight, wallOptions),
+                // Right wall
+                Bodies.rectangle(window.innerWidth + 50, window.innerHeight / 2, 100, window.innerHeight, wallOptions),
+            ];
+            Composite.add(engine.world, walls);
             
+            // 5. Create the Physics Body for the Card
+            const cardWidth = cardElement.offsetWidth;
+            const cardHeight = cardElement.offsetHeight;
+            
+            // Start the card high up
+            cardBody = Bodies.rectangle(window.innerWidth / 2, 0, cardWidth, cardHeight, {
+                restitution: 0.5, // How bouncy it is
+                density: 0.001,
+                friction: 0.5,
+                chamfer: { radius: 18 }, // Match CSS border radius
+                render: { 
+                    // This is the key: set the visible element as the texture
+                    sprite: { 
+                        texture: '#' + cardElement.id, 
+                        xScale: 1, 
+                        yScale: 1 
+                    } 
+                }
+            });
+            
+            Composite.add(engine.world, cardBody);
+
+            // 6. Add Mouse Interaction (Drag and Throw)
+            const mouse = Mouse.create(render.canvas);
+            const mouseConstraint = MouseConstraint.create(engine, {
+                mouse: mouse,
+                constraint: {
+                    stiffness: 0.2,
+                    render: { visible: false }
+                }
+            });
+            Composite.add(engine.world, mouseConstraint);
+            render.mouse = mouse; // Keep mouse sync with renderer
+
+            // 7. Sync the HTML card element with the Physics body
+            (function renderCard() {
+                const pos = cardBody.position;
+                const angle = cardBody.angle;
+                
+                cardElement.style.transform = `translate(-50%, -50%) translate(${pos.x}px, ${pos.y}px) rotate(${angle}rad)`;
+                
+                // Continue loop
+                window.requestAnimationFrame(renderCard);
+            })();
+
+            // Handle Resize
+            window.addEventListener('resize', () => {
+                // Resize the renderer
+                render.bounds.max.x = window.innerWidth;
+                render.bounds.max.y = window.innerHeight;
+                render.options.width = window.innerWidth;
+                render.options.height = window.innerHeight;
+                Render.setPixelRatio(render, window.devicePixelRatio);
+                
+                // Reposition the walls (simplest way)
+                Composite.remove(engine.world, walls);
+                walls.splice(0, walls.length, 
+                    Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 50, window.innerWidth, 100, wallOptions),
+                    Bodies.rectangle(-50, window.innerHeight / 2, 100, window.innerHeight, wallOptions),
+                    Bodies.rectangle(window.innerWidth + 50, window.innerHeight / 2, 100, window.innerHeight, wallOptions)
+                );
+                Composite.add(engine.world, walls);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initializePhysics);
+
+        // --- 3. Download Logic (Modified) ---
+        function downloadCard() {
+            // Temporarily disable physics simulation for a clean screenshot
+            Runner.stop(runner); 
+            
+            // Set card to a fixed position for a clean download image
+            cardElement.style.position = 'static';
+            cardElement.style.transform = 'none';
+
             html2canvas(cardElement, {
-                scale: 2, // Higher quality
-                backgroundColor: null, // Transparent corners
-                logging: false
+                scale: 2, 
+                backgroundColor: null,
+                logging: false,
+                useCORS: true // Important for external images like Dicebear
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = document.getElementById('inputName').value + '_Card.png';
+                link.download = display.name.textContent + '_Card.png';
                 link.href = canvas.toDataURL();
                 link.click();
+                
+                // Restore card element and restart physics
+                cardElement.style.position = 'absolute';
+                Runner.run(runner, engine); 
+                
+                // Re-apply the position synchronization immediately
+                const pos = cardBody.position;
+                const angle = cardBody.angle;
+                cardElement.style.transform = `translate(-50%, -50%) translate(${pos.x}px, ${pos.y}px) rotate(${angle}rad)`;
             });
         }
     </script>
