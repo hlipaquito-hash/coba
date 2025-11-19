@@ -4,69 +4,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STEM X Football Academy - Where Science Meets the Beautiful Game</title>
+  <title>STEM X Football Programs - Integrated Learning Excellence</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * {
       font-family: 'Inter', sans-serif;
     }
 
-    .hero-bg {
-      background: linear-gradient(135deg, #166534 0%, #1e3a8a 50%, #3b82f6 100%);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('resources/hero-stem-football.jpg') center/cover;
-      opacity: 0.15;
-      z-index: 1;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .particle-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
-
-    .stat-card {
+    .nav-blur {
       backdrop-filter: blur(10px);
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.95);
     }
 
-    .program-card {
+    .program-tab {
+      transition: all 0.3s ease;
+    }
+
+    .program-tab.active {
+      background: linear-gradient(135deg, #166534, #15803d);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(22, 101, 52, 0.3);
+    }
+
+    .subject-card {
       transition: all 0.3s ease;
       background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
     }
 
-    .program-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
-    }
-
-    .nav-blur {
-      backdrop-filter: blur(10px);
-      background: rgba(255, 255, 255, 0.95);
+    .subject-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
     }
 
     .scroll-reveal {
@@ -80,8 +50,14 @@
       transition: all 0.6s ease;
     }
 
-    .integration-demo {
-      background: linear-gradient(135deg, #f0f9ff 0%, #fef3c7 100%);
+    .difficulty-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #ef4444 100%);
+    }
+
+    .integration-example {
+      background: linear-gradient(135deg, #f0fdf4 0%, #fef3c7 100%);
     }
   </style>
 </head>
@@ -96,8 +72,8 @@
           <span class="text-xl font-bold text-gray-900">STEM X Football Academy</span>
         </div>
         <div class="hidden md:flex items-center space-x-8">
-          <a href="index.html" class="text-green-600 font-medium border-b-2 border-green-600 pb-1">Home</a>
-          <a href="programs.html" class="text-gray-700 hover:text-green-600 transition-colors">Program Kami</a>
+          <a href="index.html" class="text-gray-700 hover:text-green-600 transition-colors">Home</a>
+          <a href="programs.html" class="text-green-600 font-medium border-b-2 border-green-600 pb-1">Program Kami</a>
           <a href="registration.html" class="text-gray-700 hover:text-green-600 transition-colors">Registrasi</a>
           <a href="about.html" class="text-gray-700 hover:text-green-600 transition-colors">Tentang Kami</a>
           <a href="registration.html" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors">Daftar Sekarang</a>
@@ -114,393 +90,446 @@
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
       <div class="px-4 py-2 space-y-2">
-        <a href="index.html" class="block py-2 text-green-600 font-medium">Home</a>
-        <a href="programs.html" class="block py-2 text-gray-700">Program Kami</a>
-        <a href="registration.html" class="block py-2 text-gray-700">Registrasi</a>
-        <a href="about.html" class="block py-2 text-gray-700">Tentang Kami</a>
-        <a href="registration.html" class="block py-2 bg-green-600 text-white px-4 rounded-lg">Daftar Sekarang</a>
+        <a href="index.html" class="block py-2 text-gray-700">Home</a>
+        <a href="programs.html" class="block py-2 text-green-600 font-medium">Programs</a>
+        <a href="registration.html" class="block py-2 text-gray-700">Registration</a>
+        <a href="about.html" class="block py-2 text-gray-700">About</a>
+        <a href="registration.html" class="block py-2 bg-green-600 text-white px-4 rounded-lg">Enroll Now</a>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero-bg min-h-screen flex items-center pt-16">
-    <canvas id="particle-canvas" class="particle-bg"></canvas>
-    <div class="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <div class="text-white">
-          <h1 class="text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-            Where Science Meets the
-            <span class="text-yellow-300">Beautiful Game</span>
-          </h1>
-          <p class="text-xl mb-8 text-green-100 leading-relaxed">
-            Kami menghadirkan pendekatan revolusioner: Bimbingan Belajar STEM melalui dinamika sepak bola! Mata pelajaran abstrak seperti Matematika, Fisika, Biologi, dan Data Analisis diwujudkan dalam Project-Based learning yang menyenangkan sambil mengembangkan skill sepakbola dan kerjasama tim.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 mb-12">
-            <a href="registration.html" class="bg-yellow-400 text-green-900 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-300 transition-colors text-center">
-              Mulai perjalanan
-            </a>
-            <a href="programs.html" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-green-900 transition-colors text-center">
-              Lihat Program kami
-            </a>
-          </div>
-          <div class="grid grid-cols-3 gap-6">
-            <div class="stat-card p-4 rounded-lg text-center">
-              <div class="text-2xl font-bold text-yellow-300">95%</div>
-              <div class="text-sm text-green-100">Pengembangan Akademis</div>
-            </div>
-            <div class="stat-card p-4 rounded-lg text-center">
-              <div class="text-2xl font-bold text-yellow-300">85%</div>
-              <div class="text-sm text-green-100">Athletic Enhancement</div>
-            </div>
-            <div class="stat-card p-4 rounded-lg text-center">
-              <div class="text-2xl font-bold text-yellow-300">12:1</div>
-              <div class="text-sm text-green-100">Student Ratio</div>
-            </div>
-          </div>
-        </div>
-        <div class="relative">
-          <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-            <h3 class="text-white text-xl font-semibold mb-6">Mengapa STEM X Football?</h3>
-            <div class="space-y-4">
-              <div class="flex items-center space-x-3">
-                <div class="w-2 h-2 bg-yellow-300 rounded-full"></div>
-                <span class="text-green-100">Context-based learning</span>
-              </div>
-              <div class="flex items-center space-x-3">
-                <div class="w-2 h-2 bg-yellow-300 rounded-full"></div>
-                <span class="text-green-100">Dual skill development</span>
-              </div>
-              <div class="flex items-center space-x-3">
-                <div class="w-2 h-2 bg-yellow-300 rounded-full"></div>
-                <span class="text-green-100">Real-world applications</span>
-              </div>
-              <div class="flex items-center space-x-3">
-                <div class="w-2 h-2 bg-yellow-300 rounded-full"></div>
-                <span class="text-green-100">Enhanced engagement</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- Header Section -->
+  <section class="pt-24 pb-12 bg-gradient-to-br from-green-600 to-blue-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl lg:text-5xl font-bold text-white mb-6">STEM X Football Programs</h1>
+      <p class="text-xl text-green-100 max-w-3xl mx-auto">
+        Tingkatkan potensi akademik dan atletik dengan kurikulum terpadu kami. Pendidikan STEM dan pelatihan sepak bola bergabung secara alami, menawarkan pendekatan belajar yang menyeluruh untuk setiap siswa.
+      </p>
     </div>
   </section>
 
-  <!-- STEM-Football Integration Showcase -->
-  <section class="py-20 integration-demo">
+  <!-- Program Level Tabs -->
+  <section class="py-12 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16 scroll-reveal">
-        <h2 class="text-4xl font-bold text-gray-900 mb-4">STEM X Football Integration</h2>
-        <p class="text-xl text-gray-600 max-w-4xl mx-auto">
-          Kami menghadirkan kurikulum STEM inovatif yang mengintegrasikan sepak bola dengan pembelajaran berkualitas. Program kami tidak hanya membangun kemampuan berpikir kritis, literasi sains, dan keterampilan matematika, tetapi juga memperdalam pemahaman sepak bola melalui pendekatan sistematis,menciptakan proses belajar yang utuh dan aplikatif.
-        </p>
+      <div class="flex flex-wrap justify-center gap-4 mb-12">
+        <button class="program-tab active px-8 py-4 rounded-xl font-semibold" data-level="elementary">
+          Sekolah Dasar (K-6)
+        </button>
+        <button class="program-tab px-8 py-4 rounded-xl font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200" data-level="junior">
+          Sekolah Menengah Pertama (7-9)
+        </button>
+        <button class="program-tab px-8 py-4 rounded-xl font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200" data-level="senior">
+          Sekolah Menengah Atas (10-12)
+        </button>
       </div>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-        <div class="bg-white p-6 rounded-2xl shadow-lg text-center scroll-reveal">
-          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-2xl">⚽</span>
-          </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Physics & Kinematics</h3>
-          <p class="text-gray-600 text-sm">
-            Ball trajectory, force calculations, and motion analysis through practical football applications
+      <!-- Elementary School Program -->
+      <div id="elementary-program" class="program-content">
+        <div class="text-center mb-12 scroll-reveal">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Program Sekolah Dasar (K-6)</h2>
+          <p class="text-lg text-gray-600 max-w-4xl mx-auto">
+            Kami membangun fondasi STEM yang kokoh melalui eksperimen sepak bola yang menyenangkan. Siswa menguasai konsep sains dasar sambil mengembangkan teknik sepak bola, koordinasi, dan kerja sama tim dalam lingkungan belajar yang inspiratif.
+
           </p>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-lg text-center scroll-reveal">
-          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-2xl">📊</span>
-          </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Math & Statistics</h3>
-          <p class="text-gray-600 text-sm">
-            Performance metrics, probability analysis, and data interpretation using real match statistics
-          </p>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl shadow-lg text-center scroll-reveal">
-          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-2xl">🧬</span>
-          </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Biology & Nutrition</h3>
-          <p class="text-gray-600 text-sm">
-            Human physiology, nutrition science, and biomechanics for optimal athletic performance
-          </p>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl shadow-lg text-center scroll-reveal">
-          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-2xl">⚙️</span>
-          </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Technology & Engineering</h3>
-          <p class="text-gray-600 text-sm">
-            Equipment design, performance tracking, and sports technology innovation
-          </p>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-lg p-8 scroll-reveal">
-        <div class="grid lg:grid-cols-2 gap-8 items-center">
-          <div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-4">Real-World Learning</h3>
-            <p class="text-gray-600 mb-6">
-              Our innovative approach transforms abstract STEM concepts into tangible, exciting learning experiences.
-              Students don't just learn about physics - they experience it by analyzing their own football kicks.
-              Mathematics becomes meaningful when calculating optimal team formations and player statistics.
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div class="subject-card p-6 rounded-2xl shadow-lg scroll-reveal">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-2xl">⚽</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900">Physics & Kinematics</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              Introduction to force, motion, and energy through ball experiments and simple trajectory analysis.
             </p>
-            <ul class="space-y-3">
-              <li class="flex items-center">
-                <div class="w-2 h-2 bg-green-600 rounded-full mr-3"></div>
-                <span class="text-gray-700">Project-based learning with measurable outcomes</span>
-              </li>
-              <li class="flex items-center">
-                <div class="w-2 h-2 bg-green-600 rounded-full mr-3"></div>
-                <span class="text-gray-700">Data-driven performance analysis</span>
-              </li>
-              <li class="flex items-center">
-                <div class="w-2 h-2 bg-green-600 rounded-full mr-3"></div>
-                <span class="text-gray-700">Collaborative problem-solving in teams</span>
-              </li>
-              <li class="flex items-center">
-                <div class="w-2 h-2 bg-green-600 rounded-full mr-3"></div>
-                <span class="text-gray-700">Technology integration and innovation</span>
-              </li>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-500 mb-1">
+                <span>Difficulty Level</span>
+                <span>Beginner</span>
+              </div>
+              <div class="difficulty-bar bg-gradient-to-r from-green-400 to-green-600"></div>
+            </div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>• Rolling and bouncing experiments</li>
+              <li>• Basic speed and distance measurements</li>
+              <li>• Gravity demonstration with balls</li>
+              <li>• Simple trajectory prediction</li>
             </ul>
           </div>
-          <div class="relative">
-            <div id="integration-chart" class="w-full h-80 bg-gray-50 rounded-lg"></div>
+
+          <div class="subject-card p-6 rounded-2xl shadow-lg scroll-reveal">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-2xl">📊</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900">Math & Statistics</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              Basic counting, patterns, and simple data collection through game statistics and team formations.
+            </p>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-500 mb-1">
+                <span>Difficulty Level</span>
+                <span>Beginner</span>
+              </div>
+              <div class="difficulty-bar bg-gradient-to-r from-green-400 to-green-600"></div>
+            </div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>• Goal counting and comparison</li>
+              <li>• Player position patterns</li>
+              <li>• Simple team formation geometry</li>
+              <li>• Basic probability with passes</li>
+            </ul>
+          </div>
+
+          <div class="subject-card p-6 rounded-2xl shadow-lg scroll-reveal">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-2xl">🧬</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900">Biology & Health</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              Introduction to human body, basic nutrition, and healthy habits for young athletes.
+            </p>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-500 mb-1">
+                <span>Difficulty Level</span>
+                <span>Beginner</span>
+              </div>
+              <div class="difficulty-bar bg-gradient-to-r from-green-400 to-yellow-400"></div>
+            </div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>• Body parts and movement</li>
+              <li>• Healthy snacks for athletes</li>
+              <li>• Heart rate observation</li>
+              <li>• Importance of hydration</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="integration-example p-8 rounded-2xl scroll-reveal">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Integration Examples</h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-3">Learning Activities</h4>
+              <ul class="space-y-2 text-gray-600">
+                <li>• Measure how far different balls roll</li>
+                <li>• Count passes and calculate success rates</li>
+                <li>• Track heart rate before and after exercise</li>
+                <li>• Design simple team formations</li>
+                <li>• Experiment with different kicking techniques</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-3">Program Details</h4>
+              <ul class="space-y-2 text-gray-600">
+                <li>• Class Size: Maximum 12 students</li>
+                <li>• Duration: 2 hours per session</li>
+                <li>• Schedule: Weekday afternoons & weekends</li>
+                <li>• Assessment: Portfolio-based evaluation</li>
+                <li>• Equipment: All materials provided</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Junior High Program -->
+      <div id="junior-program" class="program-content hidden">
+        <div class="text-center mb-12 scroll-reveal">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Program Sekolah Menengah Pertama (7-9)</h2>
+          <p class="text-lg text-gray-600 max-w-4xl mx-auto">
+            Melangkah ke fase pembelajaran yang lebih advanced, kurikulum ini menghubungkan konsep STEM tingkat menengah dengan analisis taktik sepak bola yang mendalam. Siswa tidak hanya memahami teori, tetapi mampu menerapkan logika sains untuk menganalisis dan meningkatkan performa atletik.
+
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div class="subject-card p-6 rounded-2xl shadow-lg scroll-reveal">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-2xl">🎯</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900">Advanced Physics</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              Deep dive into projectile motion, force vectors, and energy conservation through football applications.
+            </p>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-500 mb-1">
+                <span>Difficulty Level</span>
+                <span>Intermediate</span>
+              </div>
+              <div class="difficulty-bar bg-gradient-to-r from-yellow-400 to-orange-400"></div>
+            </div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>• Ball trajectory calculations</li>
+              <li>• Spin and Magnus effect</li>
+              <li>• Collision physics in tackles</li>
+              <li>• Energy efficiency in movement</li>
+            </ul>
+          </div>
+
+          <div class="subject-card p-6 rounded-2xl shadow-lg scroll-reveal">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-2xl">📈</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900">Data Analysis</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              Statistical modeling, probability analysis, and performance metrics using real football data.
+            </p>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-500 mb-1">
+                <span>Difficulty Level</span>
+                <span>Intermediate</span>
+              </div>
+              <div class="difficulty-bar bg-gradient-to-r from-yellow-400 to-orange-400"></div>
+            </div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>• Performance trend analysis</li>
+              <li>• Team formation optimization</li>
+              <li>• Game outcome predictions</li>
+              <li>• Player comparison metrics</li>
+            </ul>
+          </div>
+
+          <div class="subject-card p-6 rounded-2xl shadow-lg scroll-reveal">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-2xl">🏃‍♂️</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900">Sports Science</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              Biomechanics, physiology, and nutrition science for optimizing athletic performance.
+            </p>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-500 mb-1">
+                <span>Difficulty Level</span>
+                <span>Intermediate</span>
+              </div>
+              <div class="difficulty-bar bg-gradient-to-r from-yellow-400 to-orange-400"></div>
+            </div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>• Muscle function and movement</li>
+              <li>• Energy systems in sports</li>
+              <li>• Recovery and training cycles</li>
+              <li>• Nutrition for performance</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-orange-50 p-8 rounded-2xl scroll-reveal">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Integration Examples</h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-3">Learning Activities</h4>
+              <ul class="space-y-2 text-gray-600">
+                <li>• Calculate optimal kicking angles</li>
+                <li>• Analyze team formation effectiveness</li>
+                <li>• Design training programs based on physiology</li>
+                <li>• Create performance dashboards</li>
+                <li>• Model game scenarios using probability</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-3">Program Details</h4>
+              <ul class="space-y-2 text-gray-600">
+                <li>• Class Size: Maximum 10 students</li>
+                <li>• Duration: 3 hours per session</li>
+                <li>• Schedule: Weekday evenings & weekends</li>
+                <li>• Assessment: Project-based evaluation</li>
+                <li>• Prerequisites: Elementary program completion</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Senior High Program -->
+      <div id="senior-program" class="program-content hidden">
+        <div class="text-center mb-12 scroll-reveal">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4"> Program Sekolah Menengah Atas (10-12)</h2>
+          <p class="text-lg text-gray-600 max-w-4xl mx-auto">
+            Jadilah yang terdepan: kuasai materi akademik tingkat lanjut, kembangkan penelitian orisinal, dan latih kemampuan sepak bola di level elit. Gapai keunggulan kompetitif dengan bekal keterampilan mutakhir yang membuka jalan menuju kesuksesan di bidang STEM dan dunia atletik kampus.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div class="subject-card p-6 rounded-2xl shadow-lg scroll-reveal">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-2xl">🚀</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900">Advanced Physics</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              AP-level mechanics, thermodynamics, and advanced projectile motion analysis.
+            </p>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-500 mb-1">
+                <span>Difficulty Level</span>
+                <span>Advanced</span>
+              </div>
+              <div class="difficulty-bar bg-gradient-to-r from-orange-400 to-red-500"></div>
+            </div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>• Complex trajectory calculations</li>
+              <li>• Air resistance and drag forces</li>
+              <li>• Energy transfer in collisions</li>
+              <li>• Rotational dynamics in sports</li>
+            </ul>
+          </div>
+
+          <div class="subject-card p-6 rounded-2xl shadow-lg scroll-reveal">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-2xl">💻</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900">Technology & Engineering</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              Sports technology, equipment engineering, and performance analysis systems.
+            </p>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-500 mb-1">
+                <span>Difficulty Level</span>
+                <span>Advanced</span>
+              </div>
+              <div class="difficulty-bar bg-gradient-to-r from-orange-400 to-red-500"></div>
+            </div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>• Equipment design principles</li>
+              <li>• Sensor technology in sports</li>
+              <li>• Data visualization systems</li>
+              <li>• Sports analytics programming</li>
+            </ul>
+          </div>
+
+          <div class="subject-card p-6 rounded-2xl shadow-lg scroll-reveal">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-2xl">🔬</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900">Research Methods</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              Independent research projects combining STEM analysis with athletic performance studies.
+            </p>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-500 mb-1">
+                <span>Difficulty Level</span>
+                <span>Advanced</span>
+              </div>
+              <div class="difficulty-bar bg-gradient-to-r from-orange-400 to-red-500"></div>
+            </div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>• Experimental design</li>
+              <li>• Statistical analysis</li>
+              <li>• Scientific writing</li>
+              <li>• Research presentation</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-blue-50 p-8 rounded-2xl scroll-reveal">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Integration Examples</h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-3">Learning Activities</h4>
+              <ul class="space-y-2 text-gray-600">
+                <li>• Conduct original research on kicking techniques</li>
+                <li>• Develop performance tracking applications</li>
+                <li>• Design innovative training equipment</li>
+                <li>• Create advanced statistical models</li>
+                <li>• Present findings at science fairs</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-3">Program Details</h4>
+              <ul class="space-y-2 text-gray-600">
+                <li>• Class Size: Maximum 8 students</li>
+                <li>• Duration: 4 hours per session</li>
+                <li>• Schedule: Flexible evening & weekend options</li>
+                <li>• Assessment: Research projects and AP prep</li>
+                <li>• Prerequisites: Junior High program completion</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Programs Overview -->
-  <section class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16 scroll-reveal">
-        <h2 class="text-4xl font-bold text-gray-900 mb-4">Programs for Every Level</h2>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-          Tailored STEM X Football education programs designed to meet students at their level
-          and guide them toward academic and athletic excellence.
-        </p>
-      </div>
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="program-card p-8 rounded-2xl shadow-lg scroll-reveal">
-          <div class="mb-6">
-            <img src="resources/elementary-training.jpg" alt="Elementary STEM+Football Program" class="w-full h-48 object-cover rounded-lg">
-          </div>
-          <h3 class="text-2xl font-bold text-gray-900 mb-4">Elementary School</h3>
-          <p class="text-gray-600 mb-6">
-            Grades K-6 • Foundation building through playful experiments, basic measurements,
-            and introductory football skills. Spark curiosity and develop coordination.
-          </p>
-          <ul class="space-y-2 mb-6">
-            <li class="flex items-center text-gray-600">
-              <span class="w-2 h-2 bg-green-600 rounded-full mr-3"></span>
-              Fun physics experiments with balls
-            </li>
-            <li class="flex items-center text-gray-600">
-              <span class="w-2 h-2 bg-green-600 rounded-full mr-3"></span>
-              Basic math through game statistics
-            </li>
-            <li class="flex items-center text-gray-600">
-              <span class="w-2 h-2 bg-green-600 rounded-full mr-3"></span>
-              Introduction to teamwork
-            </li>
-          </ul>
-          <a href="programs.html#elementary" class="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
-            Learn More
-          </a>
-        </div>
-
-        <div class="program-card p-8 rounded-2xl shadow-lg scroll-reveal">
-          <div class="mb-6">
-            <img src="resources/junior-training.jpg" alt="Junior High STEM+Football Program" class="w-full h-48 object-cover rounded-lg">
-          </div>
-          <h3 class="text-2xl font-bold text-gray-900 mb-4">Sekolah Menengah Pertama</h3>
-          <p class="text-gray-600 mb-6">
-            Kelas 7-9 • Intermediate concepts in physics, mathematics, and biology integrated
-            with tactical football training. Build analytical thinking and advanced skills.
-          </p>
-          <ul class="space-y-2 mb-6">
-            <li class="flex items-center text-gray-600">
-              <span class="w-2 h-2 bg-orange-600 rounded-full mr-3"></span>
-              Trajectory and force analysis
-            </li>
-            <li class="flex items-center text-gray-600">
-              <span class="w-2 h-2 bg-orange-600 rounded-full mr-3"></span>
-              Statistical modeling of performance
-            </li>
-            <li class="flex items-center text-gray-600">
-              <span class="w-2 h-2 bg-orange-600 rounded-full mr-3"></span>
-              Biomechanics and nutrition
-            </li>
-          </ul>
-          <a href="programs.html#junior" class="inline-block bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition-colors">
-            Learn More
-          </a>
-        </div>
-
-        <div class="program-card p-8 rounded-2xl shadow-lg scroll-reveal">
-          <div class="mb-6">
-            <img src="resources/students-field.jpg" alt="Senior High STEM+Football Program" class="w-full h-48 object-cover rounded-lg">
-          </div>
-          <h3 class="text-2xl font-bold text-gray-900 mb-4">Sekolah Menengah Atas</h3>
-          <p class="text-gray-600 mb-6">
-            Kelas 10-12 • Advanced placement preparation, research projects, and elite training.
-            Prepare for STEM careers and collegiate athletics.
-          </p>
-          <ul class="space-y-2 mb-6">
-            <li class="flex items-center text-gray-600">
-              <span class="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>
-              AP exam preparation
-            </li>
-            <li class="flex items-center text-gray-600">
-              <span class="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>
-              Independent research projects
-            </li>
-            <li class="flex items-center text-gray-600">
-              <span class="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>
-              Elite performance analysis
-            </li>
-          </ul>
-          <a href="programs.html#senior" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
-            Learn More
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Benefits & Performance Metrics -->
+  <!-- Integration Showcase -->
   <section class="py-20 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <div class="scroll-reveal">
-          <h2 class="text-4xl font-bold text-gray-900 mb-6">Proven Results</h2>
-          <p class="text-lg text-gray-600 mb-8">
-            Kami memanfaatkan minat siswa terhadap sepak bola untuk menciptakan lingkungan belajar yang memotivasi secara intrinsik. Dalam lingkungan ini, konsep kompleks pada subjek STEM tidak hanya sekadar teori, tetapi menjadi pengalaman nyata.ur integrated approach doesn't just improve academic scores - it transforms how students think about learning. By connecting abstract concepts to real-world football applications.
+      <div class="text-center mb-16 scroll-reveal">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">Real-World Integration Examples</h2>
+        <p class="text-xl text-gray-600">
+          See how we transform abstract STEM concepts into tangible football applications.
+        </p>
+      </div>
 
-          </p>
+      <div class="grid lg:grid-cols-2 gap-12">
+        <div class="bg-white p-8 rounded-2xl shadow-lg scroll-reveal">
+          <h3 class="text-2xl font-bold text-gray-900 mb-6">Physics in Action</h3>
           <div class="space-y-6">
-            <div class="flex items-start space-x-4">
-              <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Enhanced Academic Performance</h3>
-                <p class="text-gray-600">Students show 40% improvement in STEM subjects through contextual learning</p>
-              </div>
+            <div class="border-l-4 border-blue-500 pl-4">
+              <h4 class="font-semibold text-gray-900 mb-2">Projectile Motion</h4>
+              <p class="text-gray-600 text-sm">
+                Students calculate optimal kicking angles using trajectory equations,
+                then test their calculations on the field with real-time video analysis.
+              </p>
             </div>
-            <div class="flex items-start space-x-4">
-              <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
-                </svg>
-              </div>
-              <div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Athletic Development</h3>
-                <p class="text-gray-600">85% of students show improved coordination, strategy understanding, and physical fitness</p>
-              </div>
+            <div class="border-l-4 border-green-500 pl-4">
+              <h4 class="font-semibold text-gray-900 mb-2">Force & Energy</h4>
+              <p class="text-gray-600 text-sm">
+                Measurement of kicking force using pressure sensors, calculation of energy transfer,
+                and analysis of efficiency in different kicking techniques.
+              </p>
             </div>
-            <div class="flex items-start space-x-4">
-              <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                </svg>
-              </div>
-              <div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Critical Thinking Skills</h3>
-                <p class="text-gray-600">Enhanced problem-solving abilities through data analysis and strategic thinking</p>
-              </div>
+            <div class="border-l-4 border-orange-500 pl-4">
+              <h4 class="font-semibold text-gray-900 mb-2">Spin Dynamics</h4>
+              <p class="text-gray-600 text-sm">
+                Exploration of Magnus effect through ball spin experiments,
+                understanding curve balls and their mathematical modeling.
+              </p>
             </div>
           </div>
         </div>
-        <div class="scroll-reveal">
-          <div id="performance-chart" class="w-full h-96 bg-white rounded-2xl shadow-lg p-6"></div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Success Stories -->
-  <section class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16 scroll-reveal">
-        <h2 class="text-4xl font-bold text-gray-900 mb-4">Student Success Stories</h2>
-        <p class="text-xl text-gray-600">
-          Hear from our students and parents about their transformative STEM X Football experience.
-        </p>
-      </div>
-      <div class="splide" id="testimonials-slider">
-        <div class="splide__track">
-          <ul class="splide__list">
-            <li class="splide__slide">
-              <div class="bg-gray-50 p-8 rounded-2xl mx-4">
-                <div class="flex items-center mb-6">
-                  <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                    M
-                  </div>
-                  <div class="ml-4">
-                    <h4 class="font-semibold text-gray-900">Marcus Johnson</h4>
-                    <p class="text-gray-600">Grade 8 • Junior High Program</p>
-                  </div>
-                </div>
-                <p class="text-gray-700 mb-4">
-                  "I used to struggle with physics concepts until we started analyzing my football kicks.
-                  Now I understand trajectory, force, and motion because I can see it in action.
-                  My grades improved from C to A, and I made the school team!"
-                </p>
-                <div class="flex text-yellow-400">
-                  <span>★★★★★</span>
-                </div>
-              </div>
-            </li>
-            <li class="splide__slide">
-              <div class="bg-gray-50 p-8 rounded-2xl mx-4">
-                <div class="flex items-center mb-6">
-                  <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                    S
-                  </div>
-                  <div class="ml-4">
-                    <h4 class="font-semibold text-gray-900">Sarah Chen</h4>
-                    <p class="text-gray-600">Parent • Elementary Program</p>
-                  </div>
-                </div>
-                <p class="text-gray-700 mb-4">
-                  "My daughter Emma was always good at math but hated sitting still.
-                  STEM X Football gave her the perfect outlet - she's calculating statistics,
-                  analyzing performance data, and loving every minute of it!"
-                </p>
-                <div class="flex text-yellow-400">
-                  <span>★★★★★</span>
-                </div>
-              </div>
-            </li>
-            <li class="splide__slide">
-              <div class="bg-gray-50 p-8 rounded-2xl mx-4">
-                <div class="flex items-center mb-6">
-                  <div class="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                    A
-                  </div>
-                  <div class="ml-4">
-                    <h4 class="font-semibold text-gray-900">Alex Rodriguez</h4>
-                    <p class="text-gray-600">Grade 11 • Senior High Program</p>
-                  </div>
-                </div>
-                <p class="text-gray-700 mb-4">
-                  "The biomechanics and nutrition courses helped me understand my body better.
-                  I improved my sprint time by 0.3 seconds and my AP Biology score by two letter grades.
-                  This program is game-changing!"
-                </p>
-                <div class="flex text-yellow-400">
-                  <span>★★★★★</span>
-                </div>
-              </div>
-            </li>
-          </ul>
+        <div class="bg-white p-8 rounded-2xl shadow-lg scroll-reveal">
+          <h3 class="text-2xl font-bold text-gray-900 mb-6">Mathematics & Statistics</h3>
+          <div class="space-y-6">
+            <div class="border-l-4 border-purple-500 pl-4">
+              <h4 class="font-semibold text-gray-900 mb-2">Performance Analytics</h4>
+              <p class="text-gray-600 text-sm">
+                Students collect and analyze performance data, create statistical models,
+                and develop insights for improving individual and team performance.
+              </p>
+            </div>
+            <div class="border-l-4 border-red-500 pl-4">
+              <h4 class="font-semibold text-gray-900 mb-2">Game Theory</h4>
+              <p class="text-gray-600 text-sm">
+                Application of strategic thinking and probability to understand optimal
+                decision-making in different game scenarios and formations.
+              </p>
+            </div>
+            <div class="border-l-4 border-teal-500 pl-4">
+              <h4 class="font-semibold text-gray-900 mb-2">Geometry & Patterns</h4>
+              <p class="text-gray-600 text-sm">
+                Analysis of team formations using geometric principles,
+                spatial reasoning in positioning and movement patterns.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -510,17 +539,16 @@
   <section class="py-20 bg-green-600">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <div class="scroll-reveal">
-        <h2 class="text-4xl font-bold text-white mb-6">Ready to Transform Your Learning?</h2>
+        <h2 class="text-4xl font-bold text-white mb-6">Siap untuk mengikuti Program kami?</h2>
         <p class="text-xl text-green-100 mb-8 max-w-3xl mx-auto">
-          Join hundreds of students who are already experiencing the power of STEM X Football Academy.
-          Enroll today and discover your potential both academically and athletically.
+          Choose the program that best fits your level and start your journey toward STEM X Football excellence today.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a href="registration.html" class="bg-yellow-400 text-green-900 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-300 transition-colors">
             Daftar Sekarang
           </a>
-          <a href="programs.html" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors">
-            Lihat Program
+          <a href="about.html" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors">
+            Learn More About Us
           </a>
         </div>
       </div>
@@ -541,11 +569,11 @@
           </p>
         </div>
         <div>
-          <h3 class="text-lg font-semibold mb-4">Program Kami</h3>
+          <h3 class="text-lg font-semibold mb-4">Programs</h3>
           <ul class="space-y-2 text-gray-400">
-            <li><a href="programs.html#elementary" class="hover:text-white transition-colors">Sekolah Dasar</a></li>
-            <li><a href="programs.html#junior" class="hover:text-white transition-colors">Sekolah Menengah Pertama</a></li>
-            <li><a href="programs.html#senior" class="hover:text-white transition-colors">Sekolah Menengah Atas </a></li>
+            <li><a href="#elementary" class="hover:text-white transition-colors">Sekolah Dasar</a></li>
+            <li><a href="#junior" class="hover:text-white transition-colors">Sekolah Menengah Pertama</a></li>
+            <li><a href="#senior" class="hover:text-white transition-colors">Sekolah Menengah Atas</a></li>
           </ul>
         </div>
         <div>
@@ -560,8 +588,8 @@
           <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
           <div class="space-y-2 text-gray-400">
             <p>📧 info@stemfootball.academy</p>
-            <p>📞 (+62) 0877-897-57968</p>
-            <p>📍 , Sports City, SC 12345</p>
+            <p>📞 (555) 123-4567</p>
+            <p>📍 123 Champions Field, Sports City, SC 12345</p>
           </div>
         </div>
       </div>
